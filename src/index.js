@@ -31,6 +31,8 @@ let socket;
 let thisToken;
 
 let app_folder = app.getPath('appData');
+console.log("Found app data folder: " + app_folder);
+console.log("Platform: " + process.platform);
 if (process.platform === 'win32') { app_folder = app_folder + '\\chaotic-electrons'; } else if (process.platform === 'darwin') { app_folder = app_folder + '/chaotic-electrons'; } else if (process.platform === 'linux') { app_folder = app_folder + '/chaotic-electrons'; };
 console.log("Found game data folder: " + app_folder);  
 
