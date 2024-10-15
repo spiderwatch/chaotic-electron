@@ -15,7 +15,7 @@ import fs from 'node:fs';
 let config = {
   "gameTitle": "Chaotic Capital",
   "discord": {
-      "clientID": "1010227827481784411"
+      "clientID": "1295600323561521193"
   },
   "domain": {
       "protocol": "http",
@@ -77,152 +77,217 @@ server.get('/authCallback', (req, res) => {
 
 server.get('/home', (req, res) => {
   // fetch thisUser and render game.pug
-  res.render(path.join(import.meta.dirname + "/render/dashboard.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/dashboard.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/home/test', (req, res) => {
   // fetch thisUser and render game.pug
-  res.render(path.join(import.meta.dirname + "/render/dashboard_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/dashboard_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/leaderboard', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/leaderboard.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/leaderboard.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/leaderboard/test', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/leaderboard_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/leaderboard_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/friends', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/friends.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/friends.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/friends/test', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/shop', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/shop.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/shop.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/shop/test', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/shop_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/shop_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/bazaar', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/bazaar.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/bazaar.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/bazaar/test', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/bazaar_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/bazaar_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/workers', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/workers.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/workers.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/workers/test', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/workers_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/workers_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 
 server.get('/backpack', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/backpack.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
+  try {
+    res.render(path.join(import.meta.dirname + "/render/backpack.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
 });
 server.get('/backpack/test', (req, res) => {
   // fetch thisUser and render game
@@ -303,7 +368,7 @@ server.use('/api/:endpoint', async (req, res) => {
 });
 
 server.use((req, res) => {
-  res.status(404).sendFile('404.html');
+  res.status(404).sendFile(path.join(import.meta.dirname, '/404.html'));
 });
 
 
@@ -365,7 +430,7 @@ function loadDiscordAuthHandler(){
     title: "Chaotic Capital"
   });
 
-  discordAuthWindow.loadURL('https://discord.com/api/oauth2/authorize?client_id=' + config.discord.clientID + '&redirect_uri=http://localhost:4932/authCallback&response_type=code&scope=identify%20email%20guilds.join%20guilds');
+  discordAuthWindow.loadURL('https://discord.com/oauth2/authorize?client_id=1295600323561521193&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4932%2FauthCallback&scope=identify+email');
 
   discordAuthWindow.on('closed', function () {
     discordAuthWindow = null;
@@ -437,10 +502,10 @@ app.on('ready', () => {
         });
         thisToken = data.auth;
         socket.emit('workers', {
-          auth: row.token
+          auth: data.auth
         }, "CONFIG");
         socket.emit('me', {
-          auth: row.token
+          auth: data.auth
         }, "GET");
         socket.emit('startData', {
           auth: data.auth
