@@ -1,0 +1,19 @@
+if (isSignedIn)
+    if (showUserInNav)
+        span#navUserCard
+            #userCardLeft
+                span
+                    i.fa-sharp.fa-solid.fa-user
+                    p
+                        strong= user.name + " (" + user.username + ")"
+                span
+                    i.fa-sharp.fa-solid.fa-coins
+                    p.balance
+                        i.fa-sharp.fa-ellipsis
+            #userCardCenter
+                img(src=user.avatarURL)
+            #userCardRight
+                button#signOutButton
+                    i.fa-sharp.fa-solid.fa-sign-out-alt
+                button#userPrefsButton
+                    i.fa-sharp.fa-solid.fa-cog

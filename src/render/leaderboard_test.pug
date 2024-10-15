@@ -1,0 +1,29 @@
+doctype html
+html(lang="en")
+    head
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Play Chaotic Capital! Buy and sell items, hire workers, and climb the leaderboard!")
+        meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
+        meta(name="theme-color", content="#222222")
+        meta(name="color-scheme", content="dark light")
+        title Chaotic Capital
+        link(rel="stylesheet", href="/assets/css/megafile_test.css")
+        link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
+        script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
+    body
+        #pageFull
+            include ./components/navbarMenu.pug
+            #page
+                include ./components/navbar.pug
+                #pageContent
+                    .dashboardSectionRow.wideLeft
+                        .dashboardSectionCol
+                            include ./components/cardLeaderboard.pug
+                        .dashboardSectionCol
+                            .dashboardSection#leaderboardInfoSection
+                                h1.sectionHeader Leaderboard Info
+                                p The Chaotic Capital leaderboard is live updated every time it's loaded. The leaderboard ranks players by their net worth, which is a calculation of their balance, plus 80% of the face value of the items in their backpack, plus 80% of all hiring fees they've paid for workers. The leaderboard is a great way to see how you're doing compared to other players!
+        script(src="/assets/js/navbarToggle.js")
+        script(src="/assets/js/client_new.js")

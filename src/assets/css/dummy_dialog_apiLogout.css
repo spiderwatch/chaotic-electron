@@ -1,0 +1,64 @@
+dialog{
+    background-color: transparent;
+    border: none;
+    max-width: 30rem;
+    margin: auto;
+    padding: 0;
+}
+dialog::backdrop{
+    background: #0005;
+    backdrop-filter: blur(5px) brightness(0.2);
+}
+dialog[open]{
+    display: flex;
+}
+dialog #sections{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    transition: 1s;
+    font-family: "config-variable", "zedou", "Arial", sans-serif;
+    font-variation-settings: "wdth" 75, "slnt" 0;
+    margin: 2rem;
+    text-align: center;
+}
+dialog #headerSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+dialog #headerSection i{
+    font-size: 2em;
+    margin-right: 10px;
+}
+dialog #headerSection h1{
+    font-size: 2em;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+dialog #contentSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+dialog #contentSection h2{
+    font-size: 1.5em;
+    margin-top: 0.5rem;
+}
+dialog #contentSection p{
+    font-size: 1em;
+}
+dialog #loginButtonSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+}

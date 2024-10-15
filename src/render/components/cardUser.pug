@@ -1,0 +1,41 @@
+.dashboardSection#userCard
+        #userCardDetails
+            #userNameImage
+                img(src= user.avatarURL, alt="User's Avatar")#userImage
+                h3.thin#userName Welcome back, #{user.name}!
+            #userStats
+                ul
+                    li
+                        span.statTitle
+                            span Balance:
+                        span.statValue.balance
+                            i.fa-sharp.fa-ellipsis
+                    li
+                        span.statTitle 
+                            span Net Worth:
+                        span.statValue.netWorth
+                            i.fa-sharp.fa-ellipsis
+                    li
+                        span.statTitle
+                            span Rank:
+                        span.statEmblem.nwStatEmblem
+                            i.fa-sharp.fa-ellipsis 
+                        span.statValue.netWorthRank
+                            i.fa-sharp.fa-ellipsis
+                    li
+                        span.statTitle
+                            span To next rank:
+                        span.statValue.nwChange
+                            i.fa-sharp.fa-ellipsis
+                    if (isAdmin)
+                        li.admin
+                            span.statTitle
+                                span Admin
+                            span.statEmblem
+                                i.fa-sharp.fa-solid.fa-shield
+                    if (hasAlphaAccess)
+                        li.alpha
+                            span.statTitle
+                                span Alpha Access
+                            span.statEmblem
+                                i.fa-sharp.fa-solid.fa-star

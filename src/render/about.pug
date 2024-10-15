@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+    head
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Play Chaotic Capital! Buy and sell items, hire workers, and climb the leaderboard!")
+        meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
+        meta(name="theme-color", content="#333333")
+        title Chaotic Capital
+        link(rel="stylesheet", href="assets/css/megafile.css")
+        link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
+        script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
+    body
+        #pageFull
+            include ./components/navbarMenu.pug
+            #page
+                include ./components/navbar.pug
+                #pageContent
+                        .dashboardSection
+                            h1.sectionHeader.thin About
+                            p Make money, cause chaos 
+                        .dashboardSection
+                            h1.sectionHeader.thin Special Thanks
+                            h2 Willow - The Voice of Balance 
+                        .dashboardSection
+                            h1.sectionHeader.thin Offical Fanart
+                            h2 Rug Dealer - Soværis
+                            img(src="assets/img/Rug Dealer.png")
+                        
+        script(src="assets/js/navbarToggle.js")

@@ -1,0 +1,10 @@
+.dashboardSection#itemSellSection
+    h1.sectionHeader.thin Sell an Item
+    form#sellItemFormDashCard
+        label(for="itemType") Item Type:
+        select#itemType(name="itemType" disabled)
+            option(value selected disabled default) Loading...
+        label(for="itemQuantity") Quantity:
+        input(type="text" name="itemQuantity" id="itemQuantity" min="1" max="100" disabled placeholder="Loading...")
+        button#sellItemSubmit Sell Item(s) as Specified
+        button#sellAllItemsSubmit Sell All Items

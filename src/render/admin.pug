@@ -1,0 +1,62 @@
+doctype html
+html(lang="en")
+    head
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Play Chaotic Capital! Buy and sell items, hire workers, and climb the leaderboard!")
+        meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
+        meta(name="theme-color", content="#333333")
+        title Chaotic Capital
+        link(rel="stylesheet", href="assets/css/megafile.css")
+        link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
+        script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
+    body
+        #pageFull
+            include ./components/navbarMenu.pug
+            #page
+                include ./components/navbar.pug
+                #pageContent
+                    h1.sectionHeader User Info
+                    .dashboardSectionRow
+                        include ./components/cardBackpack.pug
+                        include ./components/cardWorkersAggregate.pug
+                    h1 Admin Panel
+                    span 
+                        h3 Target:
+                        input#targetUser(type="text", name="targetUser", value=temp_user_id)
+                    span
+                        h3 Status:
+                        p#adminStatus Not Sent
+                    span
+                        h3 Message:
+                        p#adminMsg None
+                    form#scopeContainer(name="adminPowers")
+                        select#scope(name="scope")
+                            option(value="" selected disabled hidden) Select Scope
+                            option(value="worker") Workers
+                            option(value="item") Items
+                        span#actionContainer(hidden)
+                            select#action(name="action")
+                        span#numberContainer(hidden)
+                            input(type="number")#number
+                        span#typeContainer(hidden)
+                            input(type="text")#type
+                        span#overrideContainer(hidden)
+                            label(for="adminOverride") Admin Override
+                            input(type="checkbox", name="adminOverride", value="adminOveride")#adminOverride
+                            label(for="timeOverride") Time Override
+                            input(type="checkbox", name="timeOverride", value="timeOveride")#timeOverride
+                        span#submitContainer(hidden)
+                            input(type="submit")#submit
+                    //- button#testButton Claim All Workers
+                    //- p#testBox
+                    .dashboardSectionRow
+                        .dashboardSection#adminCancerActions
+                            h1.sectionHeader Admin Actions (CANCER)
+                            button#entropize Entropize Player Data
+                    
+                    a(href="/assets/html/dummy.html") Dummy Page
+        script(src="assets/js/navbarToggle.js")
+        script(src="assets/js/adminPowers.js")
+        script(src="assets/js/client.js")

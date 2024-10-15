@@ -1,0 +1,9 @@
+.dashboardSection#workerHireSection
+    h1.sectionHeader.thin Hire a Worker
+    form#hireWorkerFormDashCard
+        label(for="workerType") Worker Type:
+        select#workerType(name="workerType")
+            option(value="" selected disabled hidden) Loading...
+        label(for="workerQuantity") Quantity:
+        input(type="number", name="workerQuantity", id="workerQuantity", min="1", max="100")
+        button#hireWorkerSubmit Hire Worker(s)

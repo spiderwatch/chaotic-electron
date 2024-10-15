@@ -1,0 +1,105 @@
+doctype html
+html(lang="en")
+    head
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Play Chaotic Capital! Buy and sell items, hire workers, and climb the leaderboard!")
+        meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
+        meta(name="theme-color", content="#222222")
+        meta(name="color-scheme", content="dark light")
+        title Chaotic Capital
+        link(rel="stylesheet", href="/assets/css/megafile_test.css")
+        link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
+        script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
+    body
+        #pageFull
+            include ./components/navbarMenu.pug
+            #page
+                include ./components/navbar.pug
+                #pageContent
+                    .dashboardSectionRow.wideRight
+                        .dashboardSectionCol
+                            .dashboardSection
+                                h3.sectionHeader Sort & Filter
+                                .sectionContent
+                                    .sortFilter
+                                        .sort
+                                            label(for="sort" style="font-weight: 700;") Sort by:
+                                            select#sort
+                                                option(value="price") Price
+                                                option(value="quantity") Quantity
+                                                option(value="nameAZ") Name (A-Z)
+                                                option(value="nameZA") Name (Z-A)
+                                                option(value="usableOn") Workers Usable On
+                                                option(value="claimableFrom") Workers Claimable From 
+                                        .filter
+                                            label(for="filter" style="font-weight: 700;") Filter by:
+                                            fieldset#filter
+                                                - console.log(config);
+                                                span.multiSelectItem
+                                                    label(for="claimable") Claimable from:
+                                                    select#claimable(name="claimable" multiple)
+                                                        for [worker, attr] of Object.entries(config.workers)
+                                                            if (attr.hireable)
+                                                                option(value=worker id=`${worker}ClaimableOption` selected)= worker
+                                                span.multiSelectItem
+                                                    label(for="usable") Usable on:
+                                                    select#usable(name="usable" multiple)
+                                                        for [worker, attr] of Object.entries(config.workers)
+                                                            if (attr.hireable)
+                                                                option(value=worker id=`${worker}UsableOption`)= worker
+                                                span.checkboxItem
+                                                    input(type="checkbox", name="isVanity" checked)#isVanity
+                                                    label(for="isVanity") Vanity Items
+                                                span.checkboxItem
+                                                    input(type="checkbox", name="isUsableOnPlayer" checked)#isUsableOnPlayer
+                                                    label(for="isUsableOnPlayer") Usable on Players
+                                        button#sortFilterButton Sort & Apply Filter(s)
+                        .dashboardSectionCol
+                            .dashboardSection#itemsExtendedSection
+                                h3.sectionHeader Your Items
+                                .sectionContent
+                                    .quickActionsToolbar
+                                        .selectAllItem
+                                            input(type="checkbox", name="selectAllItem", id="selectAllItem")
+                                            label(for="selectAllItem") Select All
+                                        .quickButtons
+                                            button#quickSellButton Quick Sell
+                                            button#quickClaimButton Quick Give
+                                    #userItems
+                                        table
+                                            thead
+                                                tr
+                                                    th(colspan="4") Item
+                                                tr
+                                                    th(rowspan="2").selectCell Select
+                                                    th(rowspan="2").iconCell Icon
+                                                    th.nameCell Name
+                                                    th(rowspan="2").actionsCell Actions
+                                                tr
+                                                    th.attributesCell Attributes
+                                            tbody
+                                                - if (user.items === undefined) user.items = {} 
+                                                each [item, quantity] of Object.entries(user.items)
+                                                    tr
+                                                        td(rowspan="2").selectCell
+                                                            label(for=`${item}Checkbox`).sr-only= `Select`
+                                                            input(type="checkbox" name="item" value=item id=`${item}Checkbox`)
+                                                        td(rowspan="2").iconCell
+                                                            i.fa-sharp.fa-square-dashed.fa-2x
+                                                        td.nameCell
+                                                            p=item
+                                                        td(rowspan="2").actionsCell
+                                                            .quickButtons
+                                                                button.quickSellButton Sell
+                                                                button.quickClaimButton Gift
+                                                        tr
+                                                            td.attributesCell
+                                                                ul
+                                                                    li Quantity: #{quantity}
+                                                if (Object.keys(user.items).length === 0)
+                                                    tr
+                                                        td(colspan="4") You have no items.
+        script(src="/assets/js/navbarToggle.js")
+        script(src="/assets/js/client_new.js")

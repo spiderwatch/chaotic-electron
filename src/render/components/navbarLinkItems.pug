@@ -1,0 +1,63 @@
+a(href="/home" style="color:white")#homeNavLink.navLink
+    li 
+        span.navLinkIcon
+            i.fa-sharp.fa-regular.fa-house
+        span Home
+if (hasAlphaAccess)
+    a(href="/home/test" style="color:white")#dashboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-house
+            span Home (Alpha)
+a(href="/leaderboard" style="color:white")#leaderboardNavLink.navLink
+    li
+        span.navLinkIcon
+            i.fa-sharp.fa-regular.fa-trophy
+        span Leaderboard
+if (hasAlphaAccess)
+    a(href="/leaderboard/test" style="color:white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-trophy
+            span Leaderboard (Alpha)
+    a(href="/friends" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-users
+            span Friends
+    a(href="/shop" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon        
+                i.fa-sharp.fa-regular.fa-cart-shopping
+            span Shop
+    a(href="/bazaar" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-store
+            span Bazaar
+    a(href="/workers" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-user-tie-hair
+            span Workers
+    a(href="/backpack" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-backpack
+            span Backpack
+    a(href="/slots" style="color: white")#leaderboardNavLink.navLink.alphaOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-slot-machine
+            span Slot Machine
+a(href="/help-about" style="color: white")#leaderboardNavLink.navLink
+    li
+        span.navLinkIcon
+            i.fa-kit.fa-sharp-solid-circle-info-circle-question
+        span Help & About
+if (isAdmin)
+    a(href="/admin" style="color: white;")#adminNavLink.navLink.adminOnly
+        li
+            span.navLinkIcon
+                i.fa-sharp.fa-regular.fa-shield
+            span Admin
