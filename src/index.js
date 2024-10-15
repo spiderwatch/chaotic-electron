@@ -6,6 +6,7 @@ import colors from 'colors';
 
 import sqlite3 from 'sqlite3';
 import express from 'express';
+import fs from 'node:fs';
 
 /* To-Do:
  - Fetch user's unlocked workers, their prices, and their purchase status and store it in config.workers (see legacy config for structure)
@@ -33,6 +34,8 @@ let thisToken;
 let app_folder = app.getPath('appData');
 console.log("Found app data folder: " + app_folder);
 console.log("Platform: " + process.platform);
+
+if (!fs.dirExistsSync(app_folder + '/chaotic-electrons')) { fs.mkdirSync(app_folder + '/chaotic-electrons'); };
 if (process.platform === 'win32') { app_folder = app_folder + '\\chaotic-electrons'; } else if (process.platform === 'darwin') { app_folder = app_folder + '/chaotic-electrons'; } else if (process.platform === 'linux') { app_folder = app_folder + '/chaotic-electrons'; };
 console.log("Found game data folder: " + app_folder);  
 
