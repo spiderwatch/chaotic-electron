@@ -436,6 +436,12 @@ app.on('ready', () => {
           }
         });
         thisToken = data.auth;
+        socket.emit('workers', {
+          auth: row.token
+        }, "CONFIG");
+        socket.emit('me', {
+          auth: row.token
+        }, "GET");
         socket.emit('startData', {
           auth: data.auth
         }, "GET");
