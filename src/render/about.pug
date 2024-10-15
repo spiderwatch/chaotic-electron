@@ -8,7 +8,7 @@ html(lang="en")
         meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
         meta(name="theme-color", content="#333333")
         title Chaotic Capital
-        link(rel="stylesheet", href="assets/css/megafile.css")
+        link(rel="stylesheet", href="/assets/css/megafile_test.css")
         link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
         script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
     body
@@ -17,15 +17,18 @@ html(lang="en")
             #page
                 include ./components/navbar.pug
                 #pageContent
-                        .dashboardSection
-                            h1.sectionHeader.thin About
-                            p Make money, cause chaos 
-                        .dashboardSection
-                            h1.sectionHeader.thin Special Thanks
-                            h2 Willow - The Voice of Balance 
-                        .dashboardSection
-                            h1.sectionHeader.thin Offical Fanart
-                            h2 Rug Dealer - Soværis
-                            img(src="assets/img/Rug Dealer.png")
+                        .dashboardSectionRow
+                            .dashboardSectionCol
+                                .dashboardSection
+                                    h1.sectionHeader.thin About
+                                    p Make money, cause chaos 
+                                    p Version: #{version}
+                                .dashboardSection
+                                    h1.sectionHeader.thin Special Thanks
+                                    p Willow - The Voice of Balance 
+                                .dashboardSection
+                                    h1.sectionHeader.thin Offical Fanart
+                                    p Rug Dealer - Soværis
+                                    img(src="assets/img/Rug Dealer.png")
                         
         script(src="assets/js/navbarToggle.js")
