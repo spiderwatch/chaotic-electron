@@ -1,6 +1,6 @@
 {
   "name": "chaotic-capital",
-  "productName": "chaotic-capital",
+  "productName": "Chaotic Capital",
   "version": "0.1.0",
   "description": "Client application for the Chaotic Capital online game.",
   "main": "src/index.js",
@@ -24,7 +24,7 @@
     "electron": "^33.0.0"
   },
   "packagerConfig": {
-    "executableName": "ChaoticCapital",
+    "executableName": "Chaotic Capital",
     "icon": "src/cc_new.ico"
   },
   "keywords": [],

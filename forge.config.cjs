@@ -3,8 +3,8 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
 module.exports = {
   packagerConfig: {
-    asar: false,
-    executableName: "chaotic-electrons",
+    asar: true,
+    executableName: "Chaotic Capital",
     win32metadata: {
       FileDescription: "Chaotic Capital",
       ProductName: "Chaotic Capital",
@@ -23,7 +23,7 @@ module.exports = {
           homepage: 'https://acethewildfire.me',
           categories: ['Game'],
           description: 'A game client for Chaotic Capital',
-          name: 'chaotic-capital',
+          name: 'Chaotic Capital',
           productName: 'Chaotic Capital',
           icon: 'src/cc_new.ico',
         }
@@ -36,7 +36,7 @@ module.exports = {
           homepage: 'https://acethewildfire.me',
           categories: ['Game'],
           description: 'A game client for Chaotic Capital',
-          name: 'chaotic-capital',
+          name: 'Chaotic Capital',
           productName: 'Chaotic Capital',
           icon: 'src/cc_new.ico',
         }
@@ -71,8 +71,8 @@ module.exports = {
       [FuseV1Options.EnableCookieEncryption]: true,
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
-      [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: false,
-      [FuseV1Options.OnlyLoadAppFromAsar]: false,
+      [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
+      [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
 };
