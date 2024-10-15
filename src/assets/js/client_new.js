@@ -48,7 +48,6 @@ async function pollAPI(route) {
         case "user":
             console.log("waiting for user data")
             let userReq = await fetch('/api/me').then((res) => res.json()).then((data) => {
-                console.log("DATADATADATADATADATADATADATADATADATADATA\n", data);
                 user = data.user;
                 user["nextWorkerClaim"] = data.nextWorkerClaim;
             });
@@ -103,38 +102,44 @@ async function updateNetWorthRank() {
     });
 
     if (document.querySelector('.nwStatEmblem') == null) return;
-    if (leaderboard.nwRank == 1) {
-        console.log("user is rank 1, setting stat emblem.");
-        document.querySelector('.nwStatEmblem svg').classList.remove('third');
-        document.querySelector('.nwStatEmblem svg').classList.remove('second');
-        document.querySelector('.nwStatEmblem svg').classList.add('first');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-medal');
-        document.querySelector('.nwStatEmblem svg').classList.add('fa-crown');
-    } else if (leaderboard.nwRank == 2) {
-        console.log("user is rank 2, setting stat emblem.");
-        document.querySelector('.nwStatEmblem svg').classList.remove('first');
-        document.querySelector('.nwStatEmblem svg').classList.remove('third');
-        document.querySelector('.nwStatEmblem svg').classList.add('second');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
-        document.querySelector('.nwStatEmblem svg').classList.add('fa-medal');
-    } else if (leaderboard.nwRank == 3) {
-        console.log("user is rank 3, setting stat emblem.");
-        document.querySelector('.nwStatEmblem svg').classList.remove('first');
-        document.querySelector('.nwStatEmblem svg').classList.remove('second');
-        document.querySelector('.nwStatEmblem svg').classList.add('third');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
-        document.querySelector('.nwStatEmblem svg').classList.add('fa-medal');
-    } else {
-        console.log("user is not in the top 3, hiding stat emblem.");
-        document.querySelector('.nwStatEmblem svg').classList.remove('first');
-        document.querySelector('.nwStatEmblem svg').classList.remove('second');
-        document.querySelector('.nwStatEmblem svg').classList.remove('third');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-medal');
-        document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
+    try {
+        if (leaderboard.nwRank == 1) {
+            console.log("user is rank 1, setting stat emblem.");
+            document.querySelector('.nwStatEmblem svg').classList.remove('third');
+            document.querySelector('.nwStatEmblem svg').classList.remove('second');
+            document.querySelector('.nwStatEmblem svg').classList.add('first');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-medal');
+            document.querySelector('.nwStatEmblem svg').classList.add('fa-crown');
+        } else if (leaderboard.nwRank == 2) {
+            console.log("user is rank 2, setting stat emblem.");
+            document.querySelector('.nwStatEmblem svg').classList.remove('first');
+            document.querySelector('.nwStatEmblem svg').classList.remove('third');
+            document.querySelector('.nwStatEmblem svg').classList.add('second');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
+            document.querySelector('.nwStatEmblem svg').classList.add('fa-medal');
+        } else if (leaderboard.nwRank == 3) {
+            console.log("user is rank 3, setting stat emblem.");
+            document.querySelector('.nwStatEmblem svg').classList.remove('first');
+            document.querySelector('.nwStatEmblem svg').classList.remove('second');
+            document.querySelector('.nwStatEmblem svg').classList.add('third');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
+            document.querySelector('.nwStatEmblem svg').classList.add('fa-medal');
+        } else {
+            console.log("user is not in the top 3, hiding stat emblem.");
+            document.querySelector('.nwStatEmblem svg').classList.remove('first');
+            document.querySelector('.nwStatEmblem svg').classList.remove('second');
+            document.querySelector('.nwStatEmblem svg').classList.remove('third');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-crown');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-medal');
+            document.querySelector('.nwStatEmblem svg').classList.remove('fa-ellipsis');
+        }
+    } catch (e) {
+        console.error("error setting stat emblem: " + e);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        updateNetWorthRank();
     }
 }
 
@@ -180,7 +185,7 @@ async function generateBackpackCard() {
         thisTable.appendChild(tableHead);
         thisTable.appendChild(tableBody);
     } else {
-        thisTable.innerHTML = "<tr><td colspan=\"3\" class=\"lastExempt\">You have no items in your backpack.</td></tr>";
+        thisTable.innerHTML = "<tr><td colspan=\"3\" class=\"lastExempt center\">You have no items in your backpack.</td></tr>";
     }
 }
 
@@ -516,7 +521,7 @@ async function generateWorkerClaimableCard() {
         cachedWorkersClaimable = totalClaimable;
 
         if (totalClaimable == 0) {
-            thisTable.innerHTML = "<tr><td colspan=\"3\">You have no workers ready to be claimed from.</td></tr><tr><td class=\"claimTimerCell\"><i class=\"fa-sharp fa-solid fa-ellipsis fa-flip fa-beat-fade fa-2x\"></i></td></tr>";
+            thisTable.innerHTML = "<tr><td colspan=\"3\" class=\"center\">You have no workers ready to be claimed from.</td></tr><tr><td class=\"claimTimerCell center\"><i class=\"fa-sharp fa-solid fa-ellipsis fa-flip fa-beat-fade fa-2x\"></i></td></tr>";
             nextClaimTimer = thisTable.querySelector(".claimTimerCell");
             updateNextClaimTimer();
             return;

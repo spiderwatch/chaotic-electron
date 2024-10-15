@@ -623,8 +623,6 @@ p{
     padding: 0 0.75rem;
 }
 .dashboardSection table td{
-    width: fit-content;
-    height: fit-content;
     padding: 0.5rem 0.75rem;
     border-bottom: 1px solid #fff2;
 }
@@ -644,11 +642,11 @@ p{
     background-color: var(--thirdback);
 }
 .lbURIcol{
-    width: 3rem;
+    width: 2rem;
     text-align: center;
 }
 .lbURRcol{
-    width: 3rem;
+    width: 2rem;
     text-align: center;
 }
 .lbURNcol{
