@@ -324,15 +324,18 @@ server.get('/wheel/test', (req, res) => {
   });
 });
 
+let package_ours = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../package.json'), 'utf8'));
+
 server.get('/help-about', (req, res) => {
   // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/help-about.pug"), {
+  res.render(path.join(import.meta.dirname + "/render/about.pug"), {
     user: thisUser,
     isSignedIn: true,
     showUserInNav: false,
     hasAlphaAccess: thisUser.access.alpha ?? false,
     isAdmin: thisUser.access.admin ?? false,
-    config: config
+    config: config,
+    version: package_ours.version,
   });
 });
 server.get('/help-about/test', (req, res) => {
