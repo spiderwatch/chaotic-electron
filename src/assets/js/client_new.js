@@ -621,7 +621,7 @@ async function generateLBCard() {
                     </td>
                     <td class="lbURRcol lbURR">${rank}</td>
                     <td class="lbURNcol lbURN">${user.screenName}</td>
-                    <td class="lbURNWcol lbURNW">${netWorth}</td>
+                    <td class="lbURNWcol lbURNW">${netWorth.toLocaleString({ style: 'currency', currency: 'USD' })}</td>
                 </tr>`;
         }
 

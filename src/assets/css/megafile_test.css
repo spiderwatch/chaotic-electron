@@ -861,6 +861,7 @@ p{
 }
 .actionsCell{
     width: 10rem;
+    padding: 0 !important;
 }
 .actionsCell .quickButtons{
     width: 100%;
@@ -876,7 +877,8 @@ p{
     border-radius: 5px;
     background-color: var(--mid);
     color: #fff;
-    padding: 0.25rem 1rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0 !important;
     cursor: pointer;
     width: 100%;
 }
