@@ -30,6 +30,7 @@ async function updateBackpackData() {
             input.setAttribute("name", "item");
             input.setAttribute("value", item);
             input.setAttribute("id", `${item}-Checkbox`);
+            input.classList.add("itemCheckbox");
             td1.appendChild(label);
             td1.appendChild(input);
             
@@ -179,6 +180,34 @@ function setupListeners() {
             }
         });
     });
+
+    // Select all button
+    let selection = false;
+    let selectAllButton = document.querySelector("#selectAllItem");
+    let selectAllLabel = document.querySelector("#selectAllLabel");
+    selectAllButton.addEventListener("click", function(e) {
+        if(selection === false){
+            selection = true;
+            selectAllLabel.innerHTML = "Deselect All";
+            
+            let checkboxes = document.querySelectorAll("input[type=checkbox]");
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.classList.contains("itemCheckbox")){
+                    checkbox.checked = true;
+                }
+            });
+        } else {
+            selection = false;
+            selectAllLabel.innerHTML = "Select All";
+            let checkboxes = document.querySelectorAll("input[type=checkbox]");
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.classList.contains("itemCheckbox")){
+                    checkbox.checked = false;
+                }
+            });
+        }
+        
+    });
 }
 
 setupListeners();
@@ -219,30 +248,3 @@ quickSellAllButton.addEventListener("click", async function(e) {
     }
 });
 
-// Select all button
-let selection = false;
-let selectAllButton = document.querySelector("#selectAllItem");
-let selectAllLabel = document.querySelector("#selectAllLabel");
-selectAllButton.addEventListener("click", function(e) {
-    if(selection === false){
-        selection = true;
-        selectAllLabel.innerHTML = "Deselect All";
-        
-        let checkboxes = document.querySelectorAll("input[type=checkbox]");
-        checkboxes.forEach((checkbox) => {
-            if (checkbox.classList.contains("itemCheckbox")){
-                checkbox.checked = true;
-            }
-        });
-    } else {
-        selection = false;
-        selectAllLabel.innerHTML = "Select All";
-        let checkboxes = document.querySelectorAll("input[type=checkbox]");
-        checkboxes.forEach((checkbox) => {
-            if (checkbox.classList.contains("itemCheckbox")){
-                checkbox.checked = false;
-            }
-        });
-    }
-    
-});
