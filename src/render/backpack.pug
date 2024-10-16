@@ -63,7 +63,7 @@ html(lang="en")
                                     .quickActionsToolbar
                                         .selectAllItem
                                             input(type="checkbox", name="selectAllItem", id="selectAllItem")
-                                            label(for="selectAllItem") Select All
+                                            label#selectAllLabel(for="selectAllItem") Select All
                                         .quickButtons
                                             button#quickSellButton Quick Sell
                                             button#quickClaimButton Quick Give
@@ -85,7 +85,7 @@ html(lang="en")
                                                         tr
                                                             td(rowspan="2").selectCell
                                                                 label(for=`${item}-Checkbox`).sr-only= `Select`
-                                                                input(type="checkbox" name="item" value=item id=`${item}-Checkbox`)
+                                                                input.itemCheckbox(type="checkbox" name="item" value=item id=`${item}-Checkbox`)
                                                             td(rowspan="2").iconCell
                                                                 i.fa-sharp.fa-square-dashed.fa-2x
                                                             td.nameCell

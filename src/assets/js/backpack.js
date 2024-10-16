@@ -182,3 +182,67 @@ function setupListeners() {
 }
 
 setupListeners();
+
+
+let quickSellAllButton = document.querySelector("#quickSellButton");
+quickSellAllButton.addEventListener("click", async function(e) {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+    let items = [];
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.classList.contains("itemCheckbox")){
+            items.push(checkbox.value);
+        }
+    });
+    console.log(items);
+    if (items.length > 0) {
+        for (let item of items) {
+            let itemRow = document.querySelector(`#${item}-Row`);
+            let itemQuantity = itemRow.querySelector("#itemAmount");
+            await fetch('/api/items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "action": "sell",
+                    "type": item,
+                    "amount": itemQuantity.innerHTML.split(" ")[1]
+                })
+            }).then(() => {
+                console.log("items sold, updating data sections");
+                updateBackpackData();
+            });
+        }
+    } else {
+        alert("Please select an item and quantity to sell.");
+    }
+});
+
+// Select all button
+let selection = false;
+let selectAllButton = document.querySelector("#selectAllItem");
+let selectAllLabel = document.querySelector("#selectAllLabel");
+selectAllButton.addEventListener("click", function(e) {
+    if(selection === false){
+        selection = true;
+        selectAllLabel.innerHTML = "Deselect All";
+        
+        let checkboxes = document.querySelectorAll("input[type=checkbox]");
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.classList.contains("itemCheckbox")){
+                checkbox.checked = true;
+            }
+        });
+    } else {
+        selection = false;
+        selectAllLabel.innerHTML = "Select All";
+        let checkboxes = document.querySelectorAll("input[type=checkbox]");
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.classList.contains("itemCheckbox")){
+                checkbox.checked = false;
+            }
+        });
+    }
+    
+});
