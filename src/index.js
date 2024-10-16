@@ -350,6 +350,19 @@ server.get('/help-about/test', (req, res) => {
   });
 });
 
+server.get('/achievements', (req, res) => {
+    // fetch thisUser and render game
+    res.render(path.join(import.meta.dirname + "/render/achievements.pug"), {
+        user: thisUser,
+        isSignedIn: true,
+        showUserInNav: false,
+        hasAlphaAccess: thisUser.access.alpha ?? false,
+        isAdmin: thisUser.access.admin ?? false,
+        config: config,
+        version: package_ours.version,
+    });
+  });
+
 server.get('/', (req, res) => {
   // fetch thisUser and render game
   res.render(path.join(import.meta.dirname + "/render/friends.pug"), {
