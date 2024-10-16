@@ -141,137 +141,137 @@ server.get('/leaderboard/test', (req, res) => {
   }
 });
 
-server.get('/friends', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/friends.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
-server.get('/friends/test', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
+// server.get('/friends', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/friends.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
+// server.get('/friends/test', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
 
-server.get('/shop', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/shop.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
-server.get('/shop/test', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/shop_test.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
+// server.get('/shop', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/shop.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
+// server.get('/shop/test', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/shop_test.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
 
-server.get('/bazaar', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/bazaar.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
-server.get('/bazaar/test', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/bazaar_test.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
+// server.get('/bazaar', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/bazaar.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
+// server.get('/bazaar/test', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/bazaar_test.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
 
-server.get('/workers', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/workers.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
-server.get('/workers/test', (req, res) => {
-  // fetch thisUser and render game
-  try {
-    res.render(path.join(import.meta.dirname + "/render/workers_test.pug"), {
-      user: thisUser,
-      isSignedIn: true,
-      showUserInNav: false,
-      hasAlphaAccess: thisUser.access.alpha ?? false,
-      isAdmin: thisUser.access.admin ?? false,
-      config: config
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while rendering the page.");
-  }
-});
+// server.get('/workers', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/workers.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
+// server.get('/workers/test', (req, res) => {
+//   // fetch thisUser and render game
+//   try {
+//     res.render(path.join(import.meta.dirname + "/render/workers_test.pug"), {
+//       user: thisUser,
+//       isSignedIn: true,
+//       showUserInNav: false,
+//       hasAlphaAccess: thisUser.access.alpha ?? false,
+//       isAdmin: thisUser.access.admin ?? false,
+//       config: config
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred while rendering the page.");
+//   }
+// });
 
 server.get('/backpack', (req, res) => {
   // fetch thisUser and render game
@@ -301,28 +301,28 @@ server.get('/backpack/test', (req, res) => {
   });
 });
 
-server.get('/wheel', (req, res) => {
-  // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/wheel.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
-});
-server.get('/wheel/test', (req, res) => {
-  // fetch thisUser and render game
-  res.render(path.join(import.meta.dirname + "/render/wheel_test.pug"), {
-    user: thisUser,
-    isSignedIn: true,
-    showUserInNav: false,
-    hasAlphaAccess: thisUser.access.alpha ?? false,
-    isAdmin: thisUser.access.admin ?? false,
-    config: config
-  });
-});
+// server.get('/wheel', (req, res) => {
+//   // fetch thisUser and render game
+//   res.render(path.join(import.meta.dirname + "/render/wheel.pug"), {
+//     user: thisUser,
+//     isSignedIn: true,
+//     showUserInNav: false,
+//     hasAlphaAccess: thisUser.access.alpha ?? false,
+//     isAdmin: thisUser.access.admin ?? false,
+//     config: config
+//   });
+// });
+// server.get('/wheel/test', (req, res) => {
+//   // fetch thisUser and render game
+//   res.render(path.join(import.meta.dirname + "/render/wheel_test.pug"), {
+//     user: thisUser,
+//     isSignedIn: true,
+//     showUserInNav: false,
+//     hasAlphaAccess: thisUser.access.alpha ?? false,
+//     isAdmin: thisUser.access.admin ?? false,
+//     config: config
+//   });
+// });
 
 let package_ours = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../package.json'), 'utf8'));
 
