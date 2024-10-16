@@ -405,12 +405,13 @@ function loadGameWindow(){
     },
     frame: true,
     resizable: true,
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     icon: path.join(import.meta.dirname, 'cc_new.ico'),
     title: "Chaotic Capital"
   });
 
   gameWindow.loadURL("http://localhost:4932/home");
+  gameWindow.webContents.openDevTools();
 
   gameWindow.on('closed', function () {
     gameWindow = null;

@@ -79,27 +79,31 @@ html(lang="en")
                                                     th(rowspan="2").actionsCell Actions
                                                 tr
                                                     th.attributesCell Attributes
-                                            tbody
+                                            tbody#userItemsBody
                                                 - if (user.items === undefined) user.items = {} 
                                                 each [item, quantity] of Object.entries(user.items)
-                                                    tr
-                                                        td(rowspan="2").selectCell
-                                                            label(for=`${item}Checkbox`).sr-only= `Select`
-                                                            input(type="checkbox" name="item" value=item id=`${item}Checkbox`)
-                                                        td(rowspan="2").iconCell
-                                                            i.fa-sharp.fa-square-dashed.fa-2x
-                                                        td.nameCell
-                                                            p=item
-                                                        td(rowspan="2").actionsCell
-                                                            .quickButtons
-                                                                button.quickSellButton Sell
-                                                                button.quickClaimButton Gift
                                                         tr
-                                                            td.attributesCell
-                                                                ul
-                                                                    li Quantity: #{quantity}
+                                                            td(rowspan="2").selectCell
+                                                                label(for=`${item}-Checkbox`).sr-only= `Select`
+                                                                input(type="checkbox" name="item" value=item id=`${item}-Checkbox`)
+                                                            td(rowspan="2").iconCell
+                                                                i.fa-sharp.fa-square-dashed.fa-2x
+                                                            td.nameCell
+                                                                p=item
+                                                            td(rowspan="2").actionsCell
+                                                                form#sellItemFormBackpack
+                                                                    input#itemType(type="hidden" name="itemType" value=item)
+                                                                    .quickButtons
+                                                                        button.quickSellButton#sellOne(name=`sellOne`) Sell One
+                                                                        button.quickSellButton#sellAll(name=`sellAll`) Sell All
+                                                                        button.quickClaimButton Gift
+                                                            tr(id=`${item}-Row`)
+                                                                td.attributesCell
+                                                                    ul
+                                                                        li#itemAmount Quantity: #{quantity}
                                                 if (Object.keys(user.items).length === 0)
                                                     tr
                                                         td(colspan="4") You have no items.
         script(src="/assets/js/navbarToggle.js")
         script(src="/assets/js/client_new.js")
+        script(src="/assets/js/backpack.js")
