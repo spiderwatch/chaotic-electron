@@ -411,6 +411,8 @@ function loadGameWindow(){
   });
 
   gameWindow.loadURL("http://localhost:4932/home");
+  // DevTools
+  //gameWindow.webContents.openDevTools();
 
   gameWindow.on('closed', function () {
     gameWindow = null;

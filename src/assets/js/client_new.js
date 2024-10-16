@@ -394,7 +394,7 @@ async function generateWorkerHireCard() {
             if (workers.global[worker] == null) continue;
             let option = document.createElement("option");
             option.value = worker;
-            option.innerText = `${worker}`;
+            option.innerText = `${worker} - ⵇ ${workers.global[worker].toLocaleString({ style: 'currency', currency: 'USD' })}`;
             thisSelect.appendChild(option);
             totalWorkers += 1;
         }

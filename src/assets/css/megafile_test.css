@@ -928,6 +928,10 @@ p{
 .hidden{
     display: none !important;
 }
+.fanart{
+    height: 20rem;
+    border-radius: 10px;
+}
 
 /* Media Queries */
 @media (min-width: 1200px){
