@@ -512,7 +512,7 @@ svg.fa-medal.third{
 #itemsSection table td:last-child:not(.lastExempt), #workersSection table td:last-child:not(.lastExempt){
     border-left: 1px dotted var(--lightest);
 }
-#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before{
+#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before, .achievementsSection table{
     display: inline-block;
     position: relative;
     left: 0;
