@@ -157,22 +157,22 @@ server.get('/leaderboard/test', (req, res) => {
 //     res.status(500).send("An error occurred while rendering the page.");
 //   }
 // });
-// server.get('/friends/test', (req, res) => {
-//   // fetch thisUser and render game
-//   try {
-//     res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
-//       user: thisUser,
-//       isSignedIn: true,
-//       showUserInNav: false,
-//       hasAlphaAccess: thisUser.access.alpha ?? false,
-//       isAdmin: thisUser.access.admin ?? false,
-//       config: config
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("An error occurred while rendering the page.");
-//   }
-// });
+server.get('/friends/test', (req, res) => {
+  // fetch thisUser and render game
+  try {
+    res.render(path.join(import.meta.dirname + "/render/friends_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while rendering the page.");
+  }
+});
 
 // server.get('/shop', (req, res) => {
 //   // fetch thisUser and render game
@@ -351,17 +351,27 @@ let package_ours = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '..
 // });
 
 server.get('/achievements', (req, res) => {
-    // fetch thisUser and render game
-    res.render(path.join(import.meta.dirname + "/render/achievements.pug"), {
-        user: thisUser,
-        isSignedIn: true,
-        showUserInNav: false,
-        hasAlphaAccess: thisUser.access.alpha ?? false,
-        isAdmin: thisUser.access.admin ?? false,
-        config: config,
-        version: package_ours.version,
-    });
+  res.render(path.join(import.meta.dirname + "/render/achievements.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config,
+      version: package_ours.version,
   });
+});
+server.get('/achievements/test', (req, res) => {
+  res.render(path.join(import.meta.dirname + "/render/achievements_test.pug"), {
+      user: thisUser,
+      isSignedIn: true,
+      showUserInNav: false,
+      hasAlphaAccess: thisUser.access.alpha ?? false,
+      isAdmin: thisUser.access.admin ?? false,
+      config: config,
+      version: package_ours.version,
+  });
+});
 
 server.get('/', (req, res) => {
   // fetch thisUser and render game
@@ -423,7 +433,7 @@ function loadGameWindow(){
     title: "Chaotic Capital"
   });
 
-  gameWindow.loadURL("http://localhost:4932/home");
+  gameWindow.loadURL("http://localhost:4932/home/test");
   // DevTools
   //gameWindow.webContents.openDevTools();
 
