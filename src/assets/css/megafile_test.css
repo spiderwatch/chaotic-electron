@@ -629,8 +629,12 @@ p{
 .dashboardSection table tr:last-child td{
     border-bottom: none;
 }
-.URC{
+.dashboardSection table thead, .dashboardSection table tbody{
+    width: 100%;
+}
+.URC, .ARC{
     height: 3rem;
+    width: 100%;
 }
 .URC.first{
     background-color: var(--firstback)
@@ -641,7 +645,7 @@ p{
 .URC.third{
     background-color: var(--thirdback);
 }
-.lbURIcol{
+.lbURIcol, .achARIcol{
     width: 2rem;
     text-align: center;
 }
@@ -649,12 +653,16 @@ p{
     width: 2rem;
     text-align: center;
 }
-.lbURNcol{
-    width: auto;
+.lbURNcol, .achARNcol{
+    width: 50%;
     padding: 0 1rem;
 }
-.lbURNWcol{
-    width: min-content;
+.achARDcol{
+    width: 50%;
+    padding: 0 1rem;
+}
+.lbURNWcol, .achARRcol{
+    width: auto;
     text-align: right;
     padding: 0 1rem;
 }

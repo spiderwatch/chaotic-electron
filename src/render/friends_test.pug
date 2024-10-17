@@ -1,0 +1,69 @@
+doctype html
+html(lang="en")
+    head
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content="Play Chaotic Capital! Buy and sell items, hire workers, and climb the leaderboard!")
+        meta(name="keywords", content="game, chaotic capital, economy, buy, sell, trade, leaderboard, rank, worker, hire, job, money, currency")
+        meta(name="theme-color", content="#333333")
+        title Chaotic Capital
+        link(rel="stylesheet", href="/assets/css/megafile_test.css")
+        link(rel="stylesheet", href="https://use.typekit.net/stl0qpb.css")
+        script(src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous")
+    body
+        #pageFull
+            include ./components/navbarMenu.pug
+            #page
+                include ./components/navbar.pug
+                #pageContent
+                        .dashboardSectionRow.wideLeft
+                            .dashboardSectionCol
+                                .dashboardSection#incomingRequestsSection
+                                    h1.sectionHeader.thin Incoming Friend Requests
+                                    table
+                                        thead
+                                            tr
+                                                th.thin.center Icon
+                                                th.fr Requestor
+                                                th.frIRRAcol Actions
+                                        tbody#incomingRequestsBody
+                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                .dashboardSection#friendsSection
+                                    h1.sectionHeader.thin Your Friends
+                                    table
+                                        thead
+                                            tr
+                                                th.thin.center Icon
+                                                th.fr Friend
+                                                th.frIRRAcol Actions
+                                        tbody#friendsBody
+                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                .dashboardSection#outgoingRequestsSection
+                                    h1.sectionHeader.thin Pending Outgoing Friend Requests
+                                    table
+                                        thead
+                                            tr
+                                                th.thin.center Icon
+                                                th.fr Requested
+                                                th.frIRRAcol Actions
+                                        tbody#outgoingRequestsBody
+                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                .dashboardSection#blockedUsersSection
+                                    h1.sectionHeader.thin Blocked Users
+                                    table
+                                        thead
+                                            tr
+                                                th.thin.center Icon
+                                                th.fr User
+                                                th.frIRRAcol Actions
+                                        tbody#blockedUsersBody
+                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+
+                                    
+                                            
+
+                                    
+        script(src="assets/js/navbarToggle.js")
+        script(src="/assets/js/client_new.js")
+        script(src="/assets/js/friends.js")

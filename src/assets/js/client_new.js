@@ -477,7 +477,8 @@ function updateNextClaimTimer() {
             // let timeString = "Your next worker will be ready for claim in:\n<HH> hours, <MM> minutes, and <SS> seconds.";
             let timeString = "Your next worker will be ready for claim in:\n";
             let hours = Math.floor(timeDiff / 3600000);
-            if (hours > 0) timeString += `${hours} hours, `;
+            if (hours > 1) timeString += `${hours} hours, `;
+            else if (hours == 1) timeString += `${hours} hour, `;
             timeDiff -= hours * 3600000;
             let minutes = Math.floor(timeDiff / 60000);
             if (minutes > 0) timeString += `${minutes} minute`;
