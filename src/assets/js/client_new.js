@@ -316,7 +316,7 @@ async function generateWorkersAggregateCard() {
             let tableBody = document.createElement("tbody");
             let tableHeadRow = document.createElement("tr");
 
-            tableHeadRow.innerHTML = "<th>Worker</th><th class=\"right\">Quantity</th><th class=\"right\">Price</th>";
+            tableHeadRow.innerHTML = "<th>Worker</th><th class=\"right\">Quantity</th><th class=\"right\">Price</th><th class=\"right\">Total</th>";
             tableHead.appendChild(tableHeadRow);
 
             let parsedWorkers = {}
@@ -339,9 +339,9 @@ async function generateWorkersAggregateCard() {
                 let quantity = parsedWorkers[worker].quantity;
                 let price = parsedWorkers[worker].price;
                 totalFeesPaid += quantity * price;
-                tableBody.innerHTML += `<tr><td class="left">${worker}</td><td class="right">${quantity}</td><td class="right">${price}</td></tr>`;
+                tableBody.innerHTML += `<tr><td class="left">${worker}</td><td class="right">${quantity}</td><td class="right">${price}</td><td class="right">${(quantity * price)}</td></tr>`;
             }
-            tableBody.innerHTML += `<tr><td class="right" colspan="2">Total fees paid:</td><td class="right">${totalFeesPaid.toLocaleString()}</td></tr>`;
+            tableBody.innerHTML += `<tr><td class="right" colspan="3">Total fees paid:</td><td class="right">${totalFeesPaid.toLocaleString()}</td></tr>`;
 
             thisTable.appendChild(tableHead);
             thisTable.appendChild(tableBody);
@@ -522,7 +522,7 @@ async function generateWorkerClaimableCard() {
         cachedWorkersClaimable = totalClaimable;
 
         if (totalClaimable == 0) {
-            thisTable.innerHTML = "<tr><td colspan=\"3\" class=\"center\">You have no workers ready to be claimed from.</td></tr><tr><td class=\"claimTimerCell center\"><i class=\"fa-sharp fa-solid fa-ellipsis fa-flip fa-beat-fade fa-2x\"></i></td></tr>";
+            thisTable.innerHTML = "<tr><th colspan=\"3\" class=\"center\">You have no workers ready to be claimed from.</th></tr><tr><td class=\"claimTimerCell center\"><i class=\"fa-sharp fa-solid fa-ellipsis fa-flip fa-beat-fade fa-2x\"></i></td></tr>";
             nextClaimTimer = thisTable.querySelector(".claimTimerCell");
             updateNextClaimTimer();
             return;

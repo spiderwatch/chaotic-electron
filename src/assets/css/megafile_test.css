@@ -512,7 +512,7 @@ svg.fa-medal.third{
 #itemsSection table td:last-child:not(.lastExempt), #workersSection table td:last-child:not(.lastExempt){
     border-left: 1px dotted var(--lightest);
 }
-#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before, .achievementsSection table{
+#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before{
     display: inline-block;
     position: relative;
     left: 0;
@@ -654,11 +654,11 @@ p{
     text-align: center;
 }
 .lbURNcol, .achARNcol{
-    width: 50%;
+    width: auto;
     padding: 0 1rem;
 }
 .achARDcol{
-    width: 50%;
+    width: auto;
     padding: 0 1rem;
 }
 .lbURNWcol, .achARRcol{
