@@ -934,6 +934,9 @@ p{
     height: 20rem;
     border-radius: 10px;
 }
+.mono{
+    font-family: monospace;
+}
 
 /* Media Queries */
 @media (min-width: 1200px){

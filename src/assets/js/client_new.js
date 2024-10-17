@@ -83,14 +83,14 @@ async function pollAPI(route) {
 async function updateBalance() {
     console.log("updating balance to " + user.balance)
     document.querySelectorAll('.balance').forEach((el) => {
-        el.innerText = user.balance.toLocaleString({ style: 'currency', currency: 'USD' });
+        el.innerText = user.balance.toFixed(2).toLocaleString({ style: 'currency', currency: 'USD' });
     });
 }
 
 async function updateNetWorth() {
     console.log("updating net worth to " + user.netWorth)
     document.querySelectorAll('.netWorth').forEach((el) => {
-        el.innerText = leaderboard.netWorthActual.toLocaleString({ style: 'currency', currency: 'USD' });
+        el.innerText = user.netWorth.toFixed(2).toLocaleString({ style: 'currency', currency: 'USD' });
     });
 }
 
@@ -481,7 +481,7 @@ function updateNextClaimTimer() {
             timeDiff -= hours * 3600000;
             let minutes = Math.floor(timeDiff / 60000);
             if (minutes > 0) timeString += `${minutes} minute`;
-            if (minutes != 1) timeString += "s";
+            if (minutes > 1) timeString += "s";
             if (hours > 0) timeString += ", ";
             else if (minutes > 0) timeString += " and ";
             timeDiff -= minutes * 60000;
@@ -603,7 +603,7 @@ async function generateLBCard() {
         for (let i = 0; i < lbData.length; i++) {
             let user = lbData[i];
             let rank = i + 1;
-            let netWorth = user.netWorth.toLocaleString({ style: 'currency', currency: 'USD' });
+            let netWorth = user.netWorth.toFixed(2).toLocaleString({ style: 'currency', currency: 'USD' });
             tableBody.innerHTML += `
                 <tr class="URC ${(() => {
                     if (rank == 1) return "first";
@@ -621,7 +621,7 @@ async function generateLBCard() {
                     </td>
                     <td class="lbURRcol lbURR">${rank}</td>
                     <td class="lbURNcol lbURN">${user.screenName}</td>
-                    <td class="lbURNWcol lbURNW">${netWorth.toLocaleString({ style: 'currency', currency: 'USD' })}</td>
+                    <td class="lbURNWcol lbURNW mono">${netWorth}</td>
                 </tr>`;
         }
 
