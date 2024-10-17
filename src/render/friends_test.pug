@@ -21,7 +21,7 @@ html(lang="en")
                             .dashboardSectionCol
                                 .dashboardSection#incomingRequestsSection
                                     h1.sectionHeader.thin Incoming Friend Requests
-                                    table
+                                    table#incomingRequestsTable
                                         thead
                                             tr
                                                 th.thin.center Icon
@@ -29,19 +29,10 @@ html(lang="en")
                                                 th.frIRRAcol Actions
                                         tbody#incomingRequestsBody
                                             i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
-                                .dashboardSection#friendsSection
-                                    h1.sectionHeader.thin Your Friends
-                                    table
-                                        thead
-                                            tr
-                                                th.thin.center Icon
-                                                th.fr Friend
-                                                th.frIRRAcol Actions
-                                        tbody#friendsBody
-                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                include ./components/cardFriends.pug
                                 .dashboardSection#outgoingRequestsSection
                                     h1.sectionHeader.thin Pending Outgoing Friend Requests
-                                    table
+                                    table#outgoingRequestsTable
                                         thead
                                             tr
                                                 th.thin.center Icon
