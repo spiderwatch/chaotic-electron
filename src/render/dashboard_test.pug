@@ -23,13 +23,14 @@ html(lang="en")
                     .dashboardSectionRow
                         .dashboardSectionCol
                             include ./components/cardBackpack.pug
-                            include ./components/cardWorkersAggregate.pug
-                            include ./components/cardWorkersToClaim.pug
-                        .dashboardSectionCol
-                            include ./components/cardFriends.pug
                             include ./components/cardAchievements.pug
                         .dashboardSectionCol
+                            include ./components/cardWorkersAggregate.pug
+                            include ./components/cardWorkersHireWorker.pug
+                            include ./components/cardWorkersToClaim.pug
+                        .dashboardSectionCol
                             include ./components/cardLeaderboard.pug
+                            include ./components/cardFriends.pug
         script(src="/assets/js/navbarToggle.js")
         script(src="/assets/js/client_new.js")
         script(src="/assets/js/achievements.js")
