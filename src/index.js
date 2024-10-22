@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron';
+import { app, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron';
 import localServer from 'express';
 import path from 'node:path';
 import io from 'socket.io-client';
@@ -9,6 +9,14 @@ import express from 'express';
 import fs from 'node:fs';
 
 import defaultRouter from './express_routes.js';
+import openLoader from './winConfig/loader.js';
+import loadGameWindow from './winConfig/game.js';
+import loadDiscordAuthHandler from './winConfig/discord.js';
+
+import { loader } from './winConfig/loader.js';
+import { gameWindow } from './winConfig/game.js';
+import { discordAuthWindow } from './winConfig/discord.js';
+
 
 /* To-Do:
  - Fetch user's unlocked workers, their prices, and their purchase status and store it in config.workers (see legacy config for structure)
@@ -26,9 +34,6 @@ let config = {
   }
 };
 
-let gameWindow;
-let loader;
-let discordAuthWindow;
 let thisUser;
 let socket;
 let thisToken;
@@ -67,84 +72,15 @@ let db = new sqlite3.Database(app_folder + '/game.db', (err) => {
 
 const server = localServer();
 server.set('views', path.join(import.meta.dirname, 'render'));
-
 server.use(express.json());
-
 server.use((req, res, next) => {
   syslog(`${req.method} ${req.url}`, colors.green);
   next();
 });
-
 server.use('/', defaultRouter);
-
-
-
 server.listen(config.domain.port, () => {
   console.log(`Game client listening at ::${config.domain.port}`);
 });
-
-function openLoader() {
-  loader = new BrowserWindow({
-    width: 300,
-    height: 400,
-    webPreferences: {
-      nodeIntegration: false,
-    },
-    frame: false,
-    resizable: false,
-    autoHideMenuBar: true,
-    icon: thisIcon,
-    title: "Chaotic Capital"
-  });
-
-  loader.loadFile(path.join(import.meta.dirname, 'loader.html'));
-}
-
-function loadGameWindow(){
-  gameWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: false,
-    },
-    frame: true,
-    resizable: true,
-    autoHideMenuBar: true,
-    icon: thisIcon,
-    title: "Chaotic Capital"
-  });
-
-  gameWindow.loadURL("http://localhost:4932/home/test");
-  // DevTools
-  //gameWindow.webContents.openDevTools();
-
-  gameWindow.on('closed', function () {
-    gameWindow = null;
-  });
-
-  gameWindow.maximize();
-}
-
-function loadDiscordAuthHandler(){
-  discordAuthWindow = new BrowserWindow({
-    width: 400,
-    height: 800,
-    webPreferences: {
-      nodeIntegration: false,
-    },
-    frame: true,
-    resizable: true,
-    autoHideMenuBar: true,
-    icon: thisIcon,
-    title: "Chaotic Capital"
-  });
-
-  discordAuthWindow.loadURL('https://discord.com/oauth2/authorize?client_id=1295600323561521193&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4932%2FauthCallback&scope=identify+email');
-
-  discordAuthWindow.on('closed', function () {
-    discordAuthWindow = null;
-  });
-}
 
 app.on('ready', () => {
   openLoader();
@@ -292,10 +228,9 @@ app.whenReady().then(() => {
   globalTray.setContextMenu(contextMenu);
 });
 
-process.on('uncaughtException', (e) => {
-  e.preventDefault();
-  syslog(e, colors.red);
-});
+// process.on('uncaughtException', (e) => {
+//   syslog(e, colors.red);
+// });
 
 
 // IPC Main
@@ -308,4 +243,4 @@ ipcMain.handle('serverReq', async (event, msg) => {
   return "Main: " + msg;
 });
 
-export { thisUser, thisToken, config, socket };
+export { thisUser, thisToken, thisIcon, config, socket };
