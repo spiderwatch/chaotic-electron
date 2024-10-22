@@ -4,12 +4,12 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
-    executableName: "Chaotic Capital",
+    executableName: "chaotic-capital",
     win32metadata: {
       FileDescription: "Chaotic Capital",
       ProductName: "Chaotic Capital",
     },
-    icon: 'src/cc_new',
+    icon: 'src/cc_new.png',
     ignore: [".dev", ".gitignore", "package-lock.json"]
   },
   rebuildConfig: {},
@@ -23,22 +23,9 @@ module.exports = {
           homepage: 'https://acethewildfire.me',
           categories: ['Game'],
           description: 'A game client for Chaotic Capital',
-          name: 'Chaotic Capital',
+          name: 'chaotic-capital',
           productName: 'Chaotic Capital',
-          icon: 'src/cc_new',
-        }
-      }
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {
-        options: {
-          homepage: 'https://acethewildfire.me',
-          categories: ['Game'],
-          description: 'A game client for Chaotic Capital',
-          name: 'Chaotic Capital',
-          productName: 'Chaotic Capital',
-          icon: 'src/cc_new',
+          icon: 'src/cc_new.png',
         }
       }
     },
@@ -48,15 +35,6 @@ module.exports = {
         arch: ['x64', 'arm64'],
       }
     },
-    {
-      name: '@electron-forge/maker-flatpak',
-      config: {
-        options: {
-          categories: ['Games'],
-          mimeType: ['x-scheme-handler/chaoticcapital']
-        }
-      }
-    }
   ],
   plugins: [
     // {

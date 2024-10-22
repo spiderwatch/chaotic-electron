@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Notification, Tray, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron';
 import localServer from 'express';
 import path from 'node:path';
 import io from 'socket.io-client';
@@ -33,6 +33,9 @@ let thisToken;
 let nextWorkerClaim;
 let nextWorkerClaimTimer;
 let globalTray;
+
+let thisIcon = nativeImage.createFromPath(path.join(import.meta.dirname, '/cc_new.png'));
+console.log("Found icon: " + path.join(import.meta.dirname, '/cc_new.png').toString());
 
 let app_folder = app.getPath('appData');
 console.log("Found app data folder: " + app_folder);
@@ -415,7 +418,7 @@ function openLoader() {
     frame: false,
     resizable: false,
     autoHideMenuBar: true,
-    icon: "/src/cc_new.png",
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -432,7 +435,7 @@ function loadGameWindow(){
     frame: true,
     resizable: true,
     autoHideMenuBar: true,
-    icon: "/src/cc_new.png",
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -457,7 +460,7 @@ function loadDiscordAuthHandler(){
     frame: true,
     resizable: true,
     autoHideMenuBar: true,
-    icon: "/src/cc_new.png",
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -616,16 +619,16 @@ app.on('activate', function () {
 });
 
 app.whenReady().then(() => {
-  globalTray = new Tray('src/cc_new.png')
+  globalTray = new Tray(thisIcon);
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Item1', type: 'radio' },
     { label: 'Item2', type: 'radio' },
     { label: 'Item3', type: 'radio', checked: true },
     { label: 'Item4', type: 'radio' }
-  ])
-  globalTray.setToolTip('This is my application.')
-  globalTray.setContextMenu(contextMenu)
-})
+  ]);
+  globalTray.setToolTip('This is my application.');
+  globalTray.setContextMenu(contextMenu);
+});
 
 process.on('uncaughtException', function (error) {
   console.error(error);
