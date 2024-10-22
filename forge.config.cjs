@@ -9,7 +9,7 @@ module.exports = {
       FileDescription: "Chaotic Capital",
       ProductName: "Chaotic Capital",
     },
-    icon: 'src/cc_new.ico',
+    icon: 'src/cc_new',
     ignore: [".dev", ".gitignore", "package-lock.json"]
   },
   rebuildConfig: {},
@@ -25,7 +25,7 @@ module.exports = {
           description: 'A game client for Chaotic Capital',
           name: 'Chaotic Capital',
           productName: 'Chaotic Capital',
-          icon: 'src/cc_new.ico',
+          icon: 'src/cc_new',
         }
       }
     },
@@ -38,7 +38,7 @@ module.exports = {
           description: 'A game client for Chaotic Capital',
           name: 'Chaotic Capital',
           productName: 'Chaotic Capital',
-          icon: 'src/cc_new.ico',
+          icon: 'src/cc_new',
         }
       }
     },
