@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron';
 import localServer from 'express';
 import path from 'node:path';
 import io from 'socket.io-client';
@@ -30,6 +30,12 @@ let discordAuthWindow;
 let thisUser;
 let socket;
 let thisToken;
+let nextWorkerClaim;
+let nextWorkerClaimTimer;
+let globalTray;
+
+let thisIcon = nativeImage.createFromPath(path.join(import.meta.dirname, '/cc_new.png'));
+console.log("Found icon: " + path.join(import.meta.dirname, '/cc_new.png').toString());
 
 let app_folder = app.getPath('appData');
 console.log("Found app data folder: " + app_folder);
@@ -412,7 +418,7 @@ function openLoader() {
     frame: false,
     resizable: false,
     autoHideMenuBar: true,
-    icon: path.join(import.meta.dirname, 'cc_new.ico'),
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -429,7 +435,7 @@ function loadGameWindow(){
     frame: true,
     resizable: true,
     autoHideMenuBar: true,
-    icon: path.join(import.meta.dirname, 'cc_new.ico'),
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -454,7 +460,7 @@ function loadDiscordAuthHandler(){
     frame: true,
     resizable: true,
     autoHideMenuBar: true,
-    icon: path.join(import.meta.dirname, 'cc_new.ico'),
+    icon: thisIcon,
     title: "Chaotic Capital"
   });
 
@@ -578,19 +584,50 @@ app.on('ready', () => {
     console.log(data);
     thisUser = data.user;
     thisUser.nextWorkerClaim = data.nextWorkerClaim;
+    nextWorkerClaimTimer = setInterval(() => {
+      // nextWorkerClaim is a UNIX timestamp
+      let nextWorkerClaim = new Date(thisUser.nextWorkerClaim).getTime();
+      let now = new Date().getTime();
+      let distance = nextWorkerClaim - now;
+      if (distance < 0) {
+        claimNotification(nextWorkerClaimTimer);
+      }
+    }, (1000 * 60 * 10)); // every 10 minutes
   });
 });
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit();
+let lastNotification;
+function claimNotification(timer){
+  if (lastNotification - Date.now() > (1000 * 60 * 10)) {
+    console.log("Notification already sent within the last 10 mins." + (lastNotification - Date.now()));
+    return;
+  } else {
+    let notification = new Notification({
+      title: "Chaotic Capital",
+      body: "You have workers ready to claim!"
+    });
+    notification.show();
+    lastNotification = new Date();
   }
-});
+  clearInterval(timer);
+}
 
 app.on('activate', function () {
   if (gameWindow === null) {
     openLoader();
   }
+});
+
+app.whenReady().then(() => {
+  globalTray = new Tray(thisIcon);
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' }
+  ]);
+  globalTray.setToolTip('This is my application.');
+  globalTray.setContextMenu(contextMenu);
 });
 
 process.on('uncaughtException', function (error) {
