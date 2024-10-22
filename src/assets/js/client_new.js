@@ -633,6 +633,58 @@ async function generateLBCard() {
     }
 }
 
+// LB TopTen Card Generation
+let lbTTCard = document.querySelector("#leaderboardTopTenSection");
+
+async function generateLBTTCard() {
+    if (lbTTCard == null) return;
+    let thisTable = lbTTCard.querySelector("table");
+    thisTable.innerHTML = "";
+    if (leaderboard) {
+        let tableHead = document.createElement("thead");
+        let tableBody = document.createElement("tbody");
+        let tableHeadRow = document.createElement("tr");
+
+        tableHeadRow.innerHTML = `
+            <th class="sr-only lbURIcol">Icon</th>
+            <th class="lbURRcol">Rank</th>
+            <th class="lbURNcol">Name</th>
+            <th class="lbURNWcol">Net Worth</th>`;
+        tableHead.appendChild(tableHeadRow);
+
+        let lbTTData = leaderboard.netWorth;
+        for (let i = 0; i < 10; i++) {
+            let user = lbTTData[i];
+            let rank = i + 1;
+            let netWorth = user.netWorth.toFixed(2).toLocaleString({ style: 'currency', currency: 'USD' });
+            tableBody.innerHTML += `
+                <tr class="URC ${(() => {
+                    if (rank == 1) return "first";
+                    else if (rank == 2) return "second";
+                    else if (rank == 3) return "third";
+                    else return "";
+                })()}">
+                    <td class="lbURIcol lbURI">
+                        <i class="fas ${(() => {
+                            if (rank == 1) return "fa-crown first";
+                            else if (rank == 2) return "fa-medal second";
+                            else if (rank == 3) return "fa-medal third";
+                            else return "";
+                        })()}"></i>
+                    </td>
+                    <td class="lbURRcol lbURR">${rank}</td>
+                    <td class="lbURNcol lbURN">${user.screenName}</td>
+                    <td class="lbURNWcol lbURNW mono">${netWorth}</td>
+                </tr>`;
+        }
+
+        thisTable.appendChild(tableHead);
+        thisTable.appendChild(tableBody);
+    } else {
+        thisTable.innerHTML = "<tr><td colspan=\"3\">Leaderboard data is not available.</td></tr>";
+    }
+}
+
 // Worker Prices object auto-generation (need to add to API!!!!) - handled by API
 
 // Item Prices object auto-generation (need to add to API!!!!) - handled by API
@@ -658,6 +710,7 @@ async function updateDataSections(pollBefore = false) {
         generateWorkerHireCard(),
         generateWorkerClaimableCard(),
         generateLBCard(),
+        generateLBTTCard()
     ]);
 }
 
