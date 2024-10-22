@@ -5,7 +5,7 @@ async function populateAchievements() {
             'Content-Type': 'application/json'
         }
     }).then(response => response.json().then(data => {
-        console.log(data.user.achievements);
+        //console.log(data.user.achievements);
         let achievements = data.user.achievements;
         let tbody = document.querySelector("#userAchievementsBody");
         tbody.innerHTML = "";
