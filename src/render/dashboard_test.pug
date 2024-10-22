@@ -23,11 +23,15 @@ html(lang="en")
                     .dashboardSectionRow
                         .dashboardSectionCol
                             include ./components/cardBackpack.pug
-                            include ./components/cardItemsSell.pug
+                            include ./components/cardAchievements.pug
                         .dashboardSectionCol
                             include ./components/cardWorkersAggregate.pug
                             include ./components/cardWorkersHireWorker.pug
-                        .dashboardSectionCol
                             include ./components/cardWorkersToClaim.pug
+                        .dashboardSectionCol
+                            include ./components/cardLeaderboard.pug
+                            include ./components/cardFriends.pug
         script(src="/assets/js/navbarToggle.js")
         script(src="/assets/js/client_new.js")
+        script(src="/assets/js/achievements.js")
+        script(src="/assets/js/friends.js") 

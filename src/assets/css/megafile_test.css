@@ -512,7 +512,7 @@ svg.fa-medal.third{
 #itemsSection table td:last-child:not(.lastExempt), #workersSection table td:last-child:not(.lastExempt){
     border-left: 1px dotted var(--lightest);
 }
-#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before, .achievementsSection table{
+#itemsSection table td:last-child:not(.lastExempt):before, #workersSection table td:last-child:not(.lastExempt):before, #leaderboardByNetWorthSection table td:last-child:not(.lastExempt):before, #leaderboardByBalanceSection table td:last-child:not(.lastExempt):before{
     display: inline-block;
     position: relative;
     left: 0;
@@ -629,8 +629,12 @@ p{
 .dashboardSection table tr:last-child td{
     border-bottom: none;
 }
-.URC{
+.dashboardSection table thead, .dashboardSection table tbody{
+    width: 100%;
+}
+.URC, .ARC{
     height: 3rem;
+    width: 100%;
 }
 .URC.first{
     background-color: var(--firstback)
@@ -641,7 +645,7 @@ p{
 .URC.third{
     background-color: var(--thirdback);
 }
-.lbURIcol{
+.lbURIcol, .achARIcol{
     width: 2rem;
     text-align: center;
 }
@@ -649,12 +653,16 @@ p{
     width: 2rem;
     text-align: center;
 }
-.lbURNcol{
+.lbURNcol, .achARNcol{
     width: auto;
     padding: 0 1rem;
 }
-.lbURNWcol{
-    width: min-content;
+.achARDcol{
+    width: auto;
+    padding: 0 1rem;
+}
+.lbURNWcol, .achARRcol{
+    width: auto;
     text-align: right;
     padding: 0 1rem;
 }

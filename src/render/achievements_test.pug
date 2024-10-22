@@ -19,15 +19,16 @@ html(lang="en")
                 #pageContent
                         .dashboardSectionRow.wideLeft
                             .dashboardSectionCol
-                                .dashboardSection.achievementsSection
-                                    h1.sectionHeader.thin Achievements
-                                    table
-                                        thead 
-                                            tr 
-                                                th.lbURRcol Achievement 
-                                                th.lbURNcol Description 
-                                                th.lbURNWcol Reward
-                                        tbody#userAchievementsBody
+                                include ./components/cardAchievements.pug
+                            .dashboardSectionCol
+                                .dashboardSection#leaderboardByNetWorthSection
+                                    h1.sectionHeader.thin About Achievements
+                                    p
+                                        | Achievements are a way to track your progress in Chaotic Capital.
+                                        | They are awarded for completing various tasks, such as buying and
+                                        | selling items, hiring workers, and climbing the leaderboard. Each
+                                        | achievement has a description and a reward. You can view your
+                                        | achievements on this page.
                                             
 
                                     
