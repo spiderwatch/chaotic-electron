@@ -7,6 +7,7 @@ import colors from 'colors';
 import sqlite3 from 'sqlite3';
 import express from 'express';
 import fs from 'node:fs';
+import { set } from 'mongoose';
 
 /* To-Do:
  - Fetch user's unlocked workers, their prices, and their purchase status and store it in config.workers (see legacy config for structure)
@@ -32,6 +33,7 @@ let socket;
 let thisToken;
 let nextWorkerClaim;
 let nextWorkerClaimTimer;
+let nextWorkerClaimTimerInterval = 1000 * 60 * 10; // Every 10 min
 let globalTray;
 
 let thisIcon = nativeImage.createFromPath(path.join(import.meta.dirname, '/cc_new.png'));
@@ -392,7 +394,7 @@ server.get('/', (req, res) => {
 });
 
 server.use('/api/:endpoint', async (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   await apiSocket(`${req.params.endpoint}`, {
     auth: thisToken,
     body: req.body
@@ -477,139 +479,173 @@ function apiSocket(endpoint, data, method, req, res){
       resolve(data);
     });
   });
-  console.log("API: " + endpoint);
+  //console.log("API: " + endpoint);
   socket.emit(endpoint, data, method);
   thisWaitingPromise.then((data) => {
     res.send(data);
   });
+  return thisWaitingPromise;
+}
+
+function notifStuff(){
+    console.log("Checking for notifications...");
+    let thisToken;
+    db.get("SELECT * FROM token", [], (err, row) => {
+        if (err) {
+            console.error(err.message);
+        }
+        if (row) {
+            thisToken = row.token;
+            // Check if the user has workers to claim on startup
+            apiSocket('me', { auth: thisToken }, "GET", {}, { send: (e) => { console.log(e) } }).then((meData) => {
+                let thisIsMe = meData.user;
+                thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
+                let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
+                let now = new Date().getTime();
+                let distance = nextWorkerClaim - now;
+                syslog("Next worker claim in " + distance + "ms", colors.green);
+                if (distance <= 0) {
+                    nextWorkerClaimTimer = setTimeout(() => {  
+                        // nextWorkerClaim is a UNIX timestamp
+                        if (distance <= 0) {
+                            claimNotification(nextWorkerClaimTimer);
+                        }
+                    }, (1000)); // first notification will be sent after a second
+                } else {
+                    nextWorkerClaimTimer = setTimeout(() => {  
+                        claimNotification(nextWorkerClaimTimer);
+                    }, (distance)); // first notification will be sent as soon as it can
+                }
+                
+            });
+        }
+    });
 }
 
 app.on('ready', () => {
-  openLoader();
+    openLoader();
 
-  console.log('Ordering dinner...');
-  socket = io('https://oracle.acethewildfire.me:4931');
-  let start = Date.now();
+    console.log('Ordering dinner...');
+    socket = io('https://oracle.acethewildfire.me:4931');
+    let start = Date.now();
 
-  socket.on('connect', () => {
-    let end = Date.now();
-    console.log('Dinner was delivered in ' + (end - start) + 'ms');
-    if (!gameWindow || gameWindow === null) {
-      try {
-        db.get("SELECT * FROM token", [], (err, row) => {
-          if (err) {
-            console.error(err.message);
-          }
-          if (row) {
-            socket.emit('auth', {
-              auth: row.token
-            }, "GET");
-          } else {
-            loadDiscordAuthHandler();
-          }
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      gameWindow.webContents.reload();
-    }
-  });
+    socket.on('connect', () => {
+        let end = Date.now();
+        console.log('Dinner was delivered in ' + (end - start) + 'ms');
+        if (!gameWindow || gameWindow === null) {
+        try {
+            db.get("SELECT * FROM token", [], (err, row) => {
+            if (err) {
+                console.error(err.message);
+            }
+            if (row) {
+                socket.emit('auth', {
+                auth: row.token
+                }, "GET");
+            } else {
+                loadDiscordAuthHandler();
+            }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        } else {
+        gameWindow.webContents.reload();
+        }
+    });
 
-  socket.on('disconnect', () => {
-    console.log('Disconnected from the server');
-    start = Date.now();
-  });
+    socket.on('disconnect', () => {
+        console.log('Disconnected from the server');
+        start = Date.now();
+    });
 
-  socket.on('auth', (data) => {
-    if (data.success) {
-      if (data.auth){
-        db.run("DELETE FROM token", [], (err) => {
-          if (err) {
-            console.error(err.message);
-          }
-        });
-        db.run("INSERT INTO token (token) VALUES (?)", [data.auth], (err) => {
-          if (err) {
-            console.error(err.message);
-          }
-        });
-        thisToken = data.auth;
-        socket.emit('workers', {
-          auth: data.auth
-        }, "CONFIG");
-        socket.emit('me', {
-          auth: data.auth
-        }, "GET");
-        socket.emit('startData', {
-          auth: data.auth
-        }, "GET");
-      } else {
-        db.get("SELECT * FROM token", [], (err, row) => {
-          if (err) {
-            console.error(err.message);
-          }
-          if (row) {
-            thisToken = row.token;
+    socket.on('auth', (data) => {
+        if (data.success) {
+        if (data.auth){
+            db.run("DELETE FROM token", [], (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+            });
+            db.run("INSERT INTO token (token) VALUES (?)", [data.auth], (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+            });
+            thisToken = data.auth;
             socket.emit('workers', {
-              auth: row.token
+            auth: data.auth
             }, "CONFIG");
             socket.emit('me', {
-              auth: row.token
+            auth: data.auth
             }, "GET");
             socket.emit('startData', {
-              auth: row.token
+            auth: data.auth
             }, "GET");
-          }
+        } else {
+            db.get("SELECT * FROM token", [], (err, row) => {
+            if (err) {
+                console.error(err.message);
+            }
+            if (row) {
+                thisToken = row.token;
+                socket.emit('workers', {
+                auth: row.token
+                }, "CONFIG");
+                socket.emit('me', {
+                auth: row.token
+                }, "GET");
+                socket.emit('startData', {
+                auth: row.token
+                }, "GET");
+            }
+            });
+        }
+        } else {
+        loadDiscordAuthHandler();
+        }
+    });
+
+    socket.on('startData', (data) => {
+        thisUser = data.user;
+        loadGameWindow();
+        loader.close();
+        notifStuff(thisUser);
+    })
+
+    socket.on('workers', (data) => {
+        if (data.method === "CONFIG") {
+            config.workers = data.global;
+        }
+    });
+    
+    socket.on('me', (data) => {
+        //console.log(data);
         });
-      }
-    } else {
-      loadDiscordAuthHandler();
-    }
-  });
-
-  socket.on('startData', (data) => {
-    thisUser = data.user;
-    loadGameWindow();
-    loader.close();
-  });
-
-  socket.on('workers', (data) => {
-    if (data.method === "CONFIG") {
-      config.workers = data.global;
-    }
-  });
-
-  socket.on('me', (data) => {
-    console.log(data);
-    thisUser = data.user;
-    thisUser.nextWorkerClaim = data.nextWorkerClaim;
-    nextWorkerClaimTimer = setInterval(() => {
-      // nextWorkerClaim is a UNIX timestamp
-      let nextWorkerClaim = new Date(thisUser.nextWorkerClaim).getTime();
-      let now = new Date().getTime();
-      let distance = nextWorkerClaim - now;
-      if (distance < 0) {
-        claimNotification(nextWorkerClaimTimer);
-      }
-    }, (1000 * 60 * 10)); // every 10 minutes
-  });
+  
+        
 });
 
-let lastNotification;
+
+let lastNotification = 0;
 function claimNotification(timer){
-  if (lastNotification - Date.now() > (1000 * 60 * 10)) {
-    console.log("Notification already sent within the last 10 mins." + (lastNotification - Date.now()));
-    return;
-  } else {
-    let notification = new Notification({
-      title: "Chaotic Capital",
-      body: "You have workers ready to claim!"
-    });
-    notification.show();
-    lastNotification = new Date();
-  }
-  clearInterval(timer);
+    if (Date.now() - lastNotification < (nextWorkerClaimTimerInterval)) {
+        console.log("Notification already sent within the last interval (" + nextWorkerClaimTimerInterval + "): " + (Date.now() - lastNotification));
+        setTimeout(() => {
+            notifStuff();
+        }, (nextWorkerClaimTimerInterval - (Date.now() - lastNotification)));
+        return;
+    } else {
+        let notification = new Notification({
+        title: "Chaotic Capital",
+        body: "You have workers ready to claim!"
+        });
+        notification.show();
+        lastNotification = new Date();
+        notifStuff();
+        clearInterval(timer);
+    }
+    clearInterval(timer);
 }
 
 app.on('activate', function () {
