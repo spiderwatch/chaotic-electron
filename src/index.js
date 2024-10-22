@@ -168,8 +168,8 @@ app.on('ready', () => {
 
   socket.on('startData', (data) => {
     thisUser = data.user;
-    loadGameWindow();
     loader.close();
+    loadGameWindow();
   });
 
   socket.on('workers', (data) => {
