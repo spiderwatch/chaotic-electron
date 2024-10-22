@@ -28,7 +28,9 @@ html(lang="en")
                                                 th.fr Requestor
                                                 th.frIRRAcol Actions
                                         tbody#incomingRequestsBody
-                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                            tr
+                                                td 
+                                                    i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x.center
                                 include ./components/cardFriends.pug
                                 .dashboardSection#outgoingRequestsSection
                                     h1.sectionHeader.thin Pending Outgoing Friend Requests
@@ -39,7 +41,9 @@ html(lang="en")
                                                 th.fr Requested
                                                 th.frIRRAcol Actions
                                         tbody#outgoingRequestsBody
-                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x
+                                            tr
+                                                td 
+                                                    i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x.center
                                 .dashboardSection#blockedUsersSection
                                     h1.sectionHeader.thin Blocked Users
                                     table
@@ -49,7 +53,15 @@ html(lang="en")
                                                 th.fr User
                                                 th.frIRRAcol Actions
                                         tbody#blockedUsersBody
-                                            i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x                        
+                                            tr
+                                                td 
+                                                    i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x.center
+
+                                    
+                                            
+
+                                    
+
         script(src="/assets/js/navbarToggle.js")
         script(src="/assets/js/client_new.js")
         script(src="/assets/js/friends.js")
