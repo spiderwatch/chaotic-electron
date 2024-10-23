@@ -269,8 +269,16 @@ function claimNotification(timer){
         return;
     } else {
         let notification = new Notification({
-        title: "Chaotic Capital",
-        body: "You have workers ready to claim!"
+            title: "Chaotic Capital",
+            body: "You have workers ready to claim!",
+            icon: thisIcon
+        });
+        notification.on('click', () => {
+            if (!gameWindow || gameWindow === null) {
+                loadGameWindow();
+            } else {
+                gameWindow.show();
+            }
         });
         notification.show();
         lastNotification = new Date();
