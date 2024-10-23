@@ -53,52 +53,50 @@ if (!fs.existsSync(app_folder + '/chaotic-electrons')) { fs.mkdirSync(app_folder
 if (process.platform === 'win32') { app_folder = app_folder + '\\chaotic-electrons'; } else if (process.platform === 'darwin') { app_folder = app_folder + '/chaotic-electrons'; } else if (process.platform === 'linux') { app_folder = app_folder + '/chaotic-electrons'; };
 console.log("Found game data folder: " + app_folder);  
 
-async function syslog(toLog, color){
-  console.log(color(`[${new Date().toISOString()}] ${toLog}`));
-}
+
 
 // connect to the database if it exists, if not, create it
 let db = new sqlite3.Database(app_folder + '/game.db', (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Connected to the game database.');
-
-  db.run(`CREATE TABLE IF NOT EXISTS token (token TEXT)`, (err) => {
     if (err) {
-      console.error(err.message);
+        console.error(err.message);
     }
-  });
+    console.log('Connected to the game database.');
 });
 
-const server = localServer();
-server.set('views', path.join(import.meta.dirname, 'render'));
-server.use(express.json());
-server.use((req, res, next) => {
-  syslog(`${req.method} ${req.url}`, colors.green);
-  next();
-});
-
-server.use('/', defaultRouter);
-
-server.listen(config.domain.port, () => {
-  console.log(`Game client listening at ::${config.domain.port}`);
-});
-
-function apiSocket(endpoint, data, method, req, res){
-  let thisWaitingPromise = new Promise((resolve, reject) => {
-    socket.on(endpoint, (data) => {
-      resolve(data);
+let isFirstInstance = app.requestSingleInstanceLock();
+if (!isFirstInstance) {
+    console.log("Another instance of the game is already running. Aborting...");
+    app.quit();
+} else {
+    gameOn();
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        if (gameWindow && gameWindow !== null) {
+            if (gameWindow.isMinimized()) gameWindow.restore();
+            gameWindow.focus();
+        } else {
+            loadGameWindow();
+        }
     });
-  });
-  console.log("API: " + endpoint);
-  socket.emit(endpoint, data, method);
-  thisWaitingPromise.then((data) => {
-    res.send(data);
-  });
-  return thisWaitingPromise;
 }
 
+async function syslog(toLog, color){
+    console.log(color(`[${new Date().toISOString()}] ${toLog}`));
+}
+
+function apiSocket(endpoint, data, method, req, res){
+    let thisWaitingPromise = new Promise((resolve, reject) => {
+        socket.on(endpoint, (data) => {
+            resolve(data);
+        });
+    });
+    console.log("API: " + endpoint);
+    socket.emit(endpoint, data, method);
+    thisWaitingPromise.then((data) => {
+        res.send(data);
+    });
+    return thisWaitingPromise;
+}
+  
 function notifStuff(){
     console.log("Checking for notifications...");
     let thisToken;
@@ -107,156 +105,207 @@ function notifStuff(){
             console.error(err.message);
         }
         if (row) {
-          thisToken = row.token;
-          // Check if the user has workers to claim on startup
-          apiSocket('me', {
-            auth: thisToken
-          }, "GET", {}, {
-            send: (data) => {
-              console.log(data);
-            }
-          }).then((meData) => {
-            let thisIsMe = meData.user;
-            thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
-            let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
-            let now = new Date().getTime();
-            let distance = nextWorkerClaim - now;
-            syslog("Next worker claim in " + distance + "ms", colors.green);
-            if (distance <= 0) {
-                nextWorkerClaimTimer = setTimeout(() => {  
-                    // nextWorkerClaim is a UNIX timestamp
-                    if (distance <= 0) {
+            thisToken = row.token;
+            // Check if the user has workers to claim on startup
+            apiSocket('me', {
+                auth: thisToken
+            }, "GET", {}, {
+                send: (data) => {
+                    console.log(data);
+                }
+            }).then((meData) => {
+                let thisIsMe = meData.user;
+                thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
+                let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
+                let now = new Date().getTime();
+                let distance = nextWorkerClaim - now;
+                syslog("Next worker claim in " + distance + "ms", colors.green);
+                if (distance <= 0) {
+                    nextWorkerClaimTimer = setTimeout(() => {  
+                        // nextWorkerClaim is a UNIX timestamp
+                        if (distance <= 0) {
+                            claimNotification(nextWorkerClaimTimer);
+                        }
+                    }, (1000)); // first notification will be sent after a second
+                } else {
+                    nextWorkerClaimTimer = setTimeout(() => {  
                         claimNotification(nextWorkerClaimTimer);
-                    }
-                }, (1000)); // first notification will be sent after a second
-            } else {
-                nextWorkerClaimTimer = setTimeout(() => {  
-                    claimNotification(nextWorkerClaimTimer);
-                }, (distance)); // first notification will be sent as soon as it can
-            }
-          });
+                    }, (distance)); // first notification will be sent as soon as it can
+                }
+            });
         }
     });
 }
 
-app.on('ready', () => {
-    openLoader();
+function gameOn(){
+    console.log('Connected to the game database.');
 
-    console.log('Ordering dinner...');
-    socket = io('https://oracle.acethewildfire.me:4931');
-    let start = Date.now();
+    db.run(`CREATE TABLE IF NOT EXISTS token (token TEXT)`, (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+    });
 
-    socket.on('connect', () => {
-        let end = Date.now();
-        console.log('Dinner was delivered in ' + (end - start) + 'ms');
-        if (!gameWindow || gameWindow === null) {
-        try {
-            db.get("SELECT * FROM token", [], (err, row) => {
-            if (err) {
-                console.error(err.message);
+    const server = localServer();
+    server.set('views', path.join(import.meta.dirname, 'render'));
+    server.use(express.json());
+    server.use((req, res, next) => {
+    syslog(`${req.method} ${req.url}`, colors.green);
+    next();
+    });
+
+    server.use('/', defaultRouter);
+
+    server.listen(config.domain.port, () => {
+    console.log(`Game client listening at ::${config.domain.port}`);
+    });
+
+
+
+    app.on('ready', () => {
+        openLoader();
+
+        console.log('Ordering dinner...');
+        socket = io('https://oracle.acethewildfire.me:4931');
+        let start = Date.now();
+
+        socket.on('connect', () => {
+            let end = Date.now();
+            console.log('Dinner was delivered in ' + (end - start) + 'ms');
+            if (!gameWindow || gameWindow === null) {
+            try {
+                db.get("SELECT * FROM token", [], (err, row) => {
+                if (err) {
+                    console.error(err.message);
+                }
+                if (row) {
+                    socket.emit('auth', {
+                        auth: row.token
+                    }, "GET");
+                } else {
+                    loadDiscordAuthHandler();
+                }
+                });
+            } catch (error) {
+                console.error(error);
             }
-            if (row) {
-                socket.emit('auth', {
-                auth: row.token
+            } else {
+                gameWindow.webContents.reload();
+            }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from the server');
+            start = Date.now();
+        });
+
+        socket.on('auth', (data) => {
+            if (data.success) {
+            if (data.auth){
+                db.run("DELETE FROM token", [], (err) => {
+                if (err) {
+                    console.error(err.message);
+                }
+                });
+                db.run("INSERT INTO token (token) VALUES (?)", [data.auth], (err) => {
+                if (err) {
+                    console.error(err.message);
+                }
+                });
+                thisToken = data.auth;
+                socket.emit('workers', {
+                    auth: data.auth
+                }, "CONFIG");
+                socket.emit('me', {
+                    auth: data.auth
                 }, "GET");
+                socket.emit('startData', {
+                    auth: data.auth
+                }, "GET");
+            } else {
+                db.get("SELECT * FROM token", [], (err, row) => {
+                if (err) {
+                    console.error(err.message);
+                }
+                if (row) {
+                    thisToken = row.token;
+                    socket.emit('workers', {
+                        auth: row.token
+                    }, "CONFIG");
+                    socket.emit('me', {
+                        auth: row.token
+                    }, "GET");
+                    socket.emit('startData', {
+                        auth: row.token
+                    }, "GET");
+                }
+                });
+            }
             } else {
                 loadDiscordAuthHandler();
             }
-            });
-        } catch (error) {
-            console.error(error);
-        }
-        } else {
-        gameWindow.webContents.reload();
-        }
-    });
+        });
 
-    socket.on('disconnect', () => {
-        console.log('Disconnected from the server');
-        start = Date.now();
-    });
+        socket.on('startData', (data) => {
+            thisUser = data.user;
+            loadGameWindow();
+            loader.close();
+            notifStuff(thisUser);
+        })
 
-    socket.on('auth', (data) => {
-        if (data.success) {
-        if (data.auth){
-            db.run("DELETE FROM token", [], (err) => {
-            if (err) {
-                console.error(err.message);
+        socket.on('workers', (data) => {
+            if (data.method === "CONFIG") {
+                config.workers = data.global;
             }
-            });
-            db.run("INSERT INTO token (token) VALUES (?)", [data.auth], (err) => {
-            if (err) {
-                console.error(err.message);
-            }
-            });
-            thisToken = data.auth;
-            socket.emit('workers', {
-            auth: data.auth
-            }, "CONFIG");
-            socket.emit('me', {
-            auth: data.auth
-            }, "GET");
-            socket.emit('startData', {
-            auth: data.auth
-            }, "GET");
-        } else {
-            db.get("SELECT * FROM token", [], (err, row) => {
-            if (err) {
-                console.error(err.message);
-            }
-            if (row) {
-                thisToken = row.token;
-                socket.emit('workers', {
-                auth: row.token
-                }, "CONFIG");
-                socket.emit('me', {
-                auth: row.token
-                }, "GET");
-                socket.emit('startData', {
-                auth: row.token
-                }, "GET");
-            }
-            });
-        }
-        } else {
-        loadDiscordAuthHandler();
-        }
-    });
-
-    socket.on('startData', (data) => {
-        thisUser = data.user;
-        loadGameWindow();
-        loader.close();
-        notifStuff(thisUser);
-    })
-
-    socket.on('workers', (data) => {
-        if (data.method === "CONFIG") {
-            config.workers = data.global;
-        }
-    });
+        });
+        
+        socket.on('me', (data) => {
+            //console.log(data);
+        });
     
-    socket.on('me', (data) => {
-        //console.log(data);
+        globalTray = new Tray(thisIcon);
+        const contextMenu = Menu.buildFromTemplate([
+            { label: "Time until next worker claim" },
+            { label: "Open Chaotic Capital", click: () => {
+                if (!gameWindow || gameWindow === null) {
+                    loadGameWindow();
+                } else {
+                    gameWindow.show();
+                }
+            }},
+            { label: "Quit", click: () => {
+                app.quit();
+            }}
+        ]);
+        globalTray.setToolTip('This is my application.');
+        globalTray.setContextMenu(contextMenu);
     });
-  
-    globalTray = new Tray(thisIcon);
-    const contextMenu = Menu.buildFromTemplate([
-        { label: "Time until next worker claim" },
-        { label: "Open Chaotic Capital", click: () => {
-            if (!gameWindow || gameWindow === null) {
-                loadGameWindow();
-            } else {
-                gameWindow.show();
-            }
-        }},
-        { label: "Quit", click: () => {
-            app.quit();
-        }}
-    ]);
-    globalTray.setToolTip('This is my application.');
-    globalTray.setContextMenu(contextMenu);
-});
+
+    app.on('activate', function () {
+        if (gameWindow === null) {
+          openLoader();
+        }
+    });
+      
+    app.on('window-all-closed', (e) => {
+        e.preventDefault();
+    });
+      
+      // process.on('uncaughtException', (e) => {
+      //   syslog(e, colors.red);
+      // });
+      
+      
+      // IPC Main
+    ipcMain.handle('echo',  (event, msg) => {
+        return msg;
+    });
+      
+    ipcMain.handle('serverReq', async (event, msg) => {
+        console.log("Main: " + msg);
+        return "Main: " + msg;
+    });
+}
 
 
 let lastNotification = 0;
@@ -287,30 +336,5 @@ function claimNotification(timer){
     }
     clearInterval(timer);
 }
-
-app.on('activate', function () {
-  if (gameWindow === null) {
-    openLoader();
-  }
-});
-
-app.on('window-all-closed', (e) => {
-    e.preventDefault();
-});
-
-// process.on('uncaughtException', (e) => {
-//   syslog(e, colors.red);
-// });
-
-
-// IPC Main
-ipcMain.handle('echo',  (event, msg) => {
-  return msg;
-});
-
-ipcMain.handle('serverReq', async (event, msg) => {
-  console.log("Main: " + msg);
-  return "Main: " + msg;
-});
 
 export { thisUser, thisToken, thisIcon, config, socket };
