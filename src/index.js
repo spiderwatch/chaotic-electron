@@ -7,7 +7,6 @@ import colors from 'colors';
 import sqlite3 from 'sqlite3';
 import express from 'express';
 import fs from 'node:fs';
-import { set } from 'mongoose';
 
 import defaultRouter from './express_routes.js';
 import openLoader from './winConfig/loader.js';
@@ -86,6 +85,20 @@ server.listen(config.domain.port, () => {
   console.log(`Game client listening at ::${config.domain.port}`);
 });
 
+function apiSocket(endpoint, data, method, req, res){
+  let thisWaitingPromise = new Promise((resolve, reject) => {
+    socket.on(endpoint, (data) => {
+      resolve(data);
+    });
+  });
+  console.log("API: " + endpoint);
+  socket.emit(endpoint, data, method);
+  thisWaitingPromise.then((data) => {
+    res.send(data);
+  });
+  return thisWaitingPromise;
+}
+
 function notifStuff(){
     console.log("Checking for notifications...");
     let thisToken;
@@ -94,29 +107,34 @@ function notifStuff(){
             console.error(err.message);
         }
         if (row) {
-            thisToken = row.token;
-            // Check if the user has workers to claim on startup
-            apiSocket('me', { auth: thisToken }, "GET", {}, { send: (e) => { console.log(e) } }).then((meData) => {
-                let thisIsMe = meData.user;
-                thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
-                let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
-                let now = new Date().getTime();
-                let distance = nextWorkerClaim - now;
-                syslog("Next worker claim in " + distance + "ms", colors.green);
-                if (distance <= 0) {
-                    nextWorkerClaimTimer = setTimeout(() => {  
-                        // nextWorkerClaim is a UNIX timestamp
-                        if (distance <= 0) {
-                            claimNotification(nextWorkerClaimTimer);
-                        }
-                    }, (1000)); // first notification will be sent after a second
-                } else {
-                    nextWorkerClaimTimer = setTimeout(() => {  
+          thisToken = row.token;
+          // Check if the user has workers to claim on startup
+          apiSocket('me', {
+            auth: thisToken
+          }, "GET", {}, {
+            send: (data) => {
+              console.log(data);
+            }
+          }).then((meData) => {
+            let thisIsMe = meData.user;
+            thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
+            let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
+            let now = new Date().getTime();
+            let distance = nextWorkerClaim - now;
+            syslog("Next worker claim in " + distance + "ms", colors.green);
+            if (distance <= 0) {
+                nextWorkerClaimTimer = setTimeout(() => {  
+                    // nextWorkerClaim is a UNIX timestamp
+                    if (distance <= 0) {
                         claimNotification(nextWorkerClaimTimer);
-                    }, (distance)); // first notification will be sent as soon as it can
-                }
-                
-            });
+                    }
+                }, (1000)); // first notification will be sent after a second
+            } else {
+                nextWorkerClaimTimer = setTimeout(() => {  
+                    claimNotification(nextWorkerClaimTimer);
+                }, (distance)); // first notification will be sent as soon as it can
+            }
+          });
         }
     });
 }
@@ -222,7 +240,22 @@ app.on('ready', () => {
         //console.log(data);
     });
   
-        
+    globalTray = new Tray(thisIcon);
+    const contextMenu = Menu.buildFromTemplate([
+        { label: "Time until next worker claim" },
+        { label: "Open Chaotic Capital", click: () => {
+            if (!gameWindow || gameWindow === null) {
+                loadGameWindow();
+            } else {
+                gameWindow.show();
+            }
+        }},
+        { label: "Quit", click: () => {
+            app.quit();
+        }}
+    ]);
+    globalTray.setToolTip('This is my application.');
+    globalTray.setContextMenu(contextMenu);
 });
 
 
@@ -253,16 +286,8 @@ app.on('activate', function () {
   }
 });
 
-app.whenReady().then(() => {
-  globalTray = new Tray(thisIcon);
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
-  ]);
-  globalTray.setToolTip('This is my application.');
-  globalTray.setContextMenu(contextMenu);
+app.on('window-all-closed', (e) => {
+    e.preventDefault();
 });
 
 // process.on('uncaughtException', (e) => {
