@@ -19,6 +19,11 @@ html(lang="en")
                 #pageContent
                         .dashboardSectionRow.wideLeft
                             .dashboardSectionCol
+                                .dashboardSection#addFriendSection
+                                    h1.sectionHeader.thin Add Friend
+                                    form#addFriendForm
+                                        input(type="text", id="addFriendInput", placeholder="Enter a username")
+                                        button#addFriendButton Add Friend
                                 .dashboardSection#incomingRequestsSection
                                     h1.sectionHeader.thin Incoming Friend Requests
                                     table#incomingRequestsTable
