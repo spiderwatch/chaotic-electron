@@ -6,16 +6,22 @@ let gameWindow;
 
 export default function loadGameWindow(){
   gameWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
     webPreferences: {
       nodeIntegration: false,
+      sandbox: true,
     },
     frame: true,
     resizable: true,
     autoHideMenuBar: true,
     icon: thisIcon,
-    title: "Chaotic Capital"
+    title: "Chaotic Capital",
+    maximizable: true,
+    minimizable: true,
+    fullscreenable: true,
+    show: true,
+    backgroundColor: '#000000',
+    titleBarStyle: "default",
+    transparent: false,
   });
 
   gameWindow.loadURL("http://localhost:4932/home/test");
@@ -26,7 +32,9 @@ export default function loadGameWindow(){
     gameWindow = null;
   });
 
-  gameWindow.maximize();
+  gameWindow.on('show', function () {
+    gameWindow.maximize();
+  });
 }
 
 export { gameWindow };

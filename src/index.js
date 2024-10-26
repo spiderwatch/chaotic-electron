@@ -15,7 +15,6 @@ import loadDiscordAuthHandler from './winConfig/discord.js';
 
 import { loader } from './winConfig/loader.js';
 import { gameWindow } from './winConfig/game.js';
-import { discordAuthWindow } from './winConfig/discord.js';
 
 
 /* To-Do:
@@ -49,8 +48,8 @@ let app_folder = app.getPath('appData');
 console.log("Found app data folder: " + app_folder);
 console.log("Platform: " + process.platform);
 
-if (!fs.existsSync(app_folder + '/chaotic-electrons')) { fs.mkdirSync(app_folder + '/chaotic-electrons'); };
-if (process.platform === 'win32') { app_folder = app_folder + '\\chaotic-electrons'; } else if (process.platform === 'darwin') { app_folder = app_folder + '/chaotic-electrons'; } else if (process.platform === 'linux') { app_folder = app_folder + '/chaotic-electrons'; };
+if (!fs.existsSync(app_folder + '/Chaotic Capital')) { fs.mkdirSync(app_folder + '/Chaotic Capital'); };
+if (process.platform === 'win32') { app_folder = app_folder + '\\Chaotic Capital'; } else if (process.platform === 'darwin') { app_folder = app_folder + '/Chaotic Capital'; } else if (process.platform === 'linux') { app_folder = app_folder + '/Chaotic Capital'; };
 console.log("Found game data folder: " + app_folder);  
 
 
@@ -150,14 +149,14 @@ function gameOn(){
     server.set('views', path.join(import.meta.dirname, 'render'));
     server.use(express.json());
     server.use((req, res, next) => {
-    syslog(`${req.method} ${req.url}`, colors.green);
-    next();
+        syslog(`${req.method} ${req.url}`, colors.green);
+        next();
     });
 
     server.use('/', defaultRouter);
 
     server.listen(config.domain.port, () => {
-    console.log(`Game client listening at ::${config.domain.port}`);
+        console.log(`Game client listening at ::${config.domain.port}`);
     });
 
 
@@ -260,7 +259,7 @@ function gameOn(){
         });
         
         socket.on('me', (data) => {
-            //console.log(data);
+            thisUser = data.user;
         });
     
         globalTray = new Tray(thisIcon);
@@ -269,8 +268,11 @@ function gameOn(){
             { label: "Open Chaotic Capital", click: () => {
                 if (!gameWindow || gameWindow === null) {
                     loadGameWindow();
+                    gameWindow.maximize();
                 } else {
                     gameWindow.show();
+                    gameWindow.focus();
+                    gameWindow.maximize();
                 }
             }},
             { label: "Quit", click: () => {
@@ -327,6 +329,7 @@ function claimNotification(timer){
                 loadGameWindow();
             } else {
                 gameWindow.show();
+                gameWindow.focus();
             }
         });
         notification.show();
