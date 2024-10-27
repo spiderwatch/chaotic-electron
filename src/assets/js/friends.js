@@ -31,6 +31,25 @@ async function populateTables(){
             row.appendChild(name);
             let accept = document.createElement('td');
             let acceptButton = document.createElement('button');
+            acceptButton.addEventListener('click', async () => {
+                await fetch('/api/friends', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sender: request.user_1,
+                        recipient: request.user_2,
+                        action: 'accept'
+                    })
+                }).then(response => {
+                    if (response.status === 200) {
+                        populateTables();
+                    }
+                });
+            });
+            accept.appendChild(acceptButton);
+            row.appendChild(accept);
             acceptButton.innerHTML = `<i class="fas fa-check"></i>`; 
             incomingTableBody.appendChild(row);        
         });

@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { thisUser, thisToken, config, socket } from './index.js';
+import { discordAuthWindow } from './winConfig/discord.js';
 import express from 'express';
 
 const router = Router();
@@ -13,7 +14,6 @@ function apiSocket(endpoint, data, method, req, res){
       resolve(data);
     });
   });
-  console.log("API: " + endpoint);
   socket.emit(endpoint, data, method);
   thisWaitingPromise.then((data) => {
     res.send(data);
@@ -340,7 +340,6 @@ router.get('/friends', (req, res) => {
 });
 
 router.use('/api/:endpoint', async (req, res) => {
-  console.log(req.body);
   await apiSocket(`${req.params.endpoint}`, {
     auth: thisToken,
     body: req.body
