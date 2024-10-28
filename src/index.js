@@ -1,4 +1,5 @@
 import { app, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron';
+import electronSquirrelStartup from 'electron-squirrel-startup'; // Handle creating shortcuts for Windows, force-quit
 import localServer from 'express';
 import path from 'node:path';
 import io from 'socket.io-client';
@@ -18,6 +19,12 @@ import { gameWindow } from './winConfig/game.js';
 
 import { newNotification } from './global_functions.js';
 
+import { firstSetup } from './setup.js';
+
+if (electronSquirrelStartup) app.quit();
+if(firstSetup()) {
+  process.exit()
+}
 
 /* To-Do:
  - Fetch user's unlocked workers, their prices, and their purchase status and store it in config.workers (see legacy config for structure)
@@ -165,7 +172,7 @@ function gameOn(){
 
     app.on('ready', () => {
         openLoader();
-
+        
         console.log('Ordering dinner...');
         socket = io('https://oracle.acethewildfire.me:4931');
         let start = Date.now();
