@@ -1,5 +1,5 @@
-import packageInfo from './package.json';
-import { contextBridge, ipcRenderer } from 'electron/renderer';
+let { ipcRenderer, contextBridge } = require('electron');
+//const packageInfo = require('../package.json');
 
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -10,14 +10,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
         console.log("Main: " + response);
         return response;
     },
-    getVersion: () => {
-        return packageInfo.version;
-    },
+    // getVersion: () => {
+    //     return packageInfo.version;
+    // },
     serverReq: async (msg) => {
         console.log("Renderer: " + msg);
         console.log("Sending to Main");
         const response = await ipcRenderer.invoke('serverReq', msg);
         console.log("Main: " + response);
+        return response;
+    },
+    newNotification: async (title, body) => {
+        const response = await ipcRenderer.invoke('newNotification', title, body);
         return response;
     }
 });
