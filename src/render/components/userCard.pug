@@ -1,19 +1,46 @@
-if (isSignedIn)
-    if (showUserInNav)
-        span#navUserCard
-            #userCardLeft
-                span
-                    i.fa-sharp.fa-solid.fa-user
-                    p
-                        strong= user.name + " (" + user.username + ")"
-                span
-                    i.fa-sharp.fa-solid.fa-coins
-                    p.balance
-                        i.fa-sharp.fa-ellipsis
-            #userCardCenter
-                img(src=user.avatarURL)
-            #userCardRight
-                button#signOutButton
-                    i.fa-sharp.fa-solid.fa-sign-out-alt
-                button#userPrefsButton
-                    i.fa-sharp.fa-solid.fa-cog
+//- span#navUserCard
+//-     #userCardLeft
+//-         span
+//-             i.fa-sharp.fa-solid.fa-user
+//-             p
+//-                 strong= user.name + " (" + user.username + ")"
+//-         span
+//-             i.fa-sharp.fa-solid.fa-coins
+//-             p.balance
+//-                 i.fa-sharp.fa-ellipsis
+//-     #userCardCenter
+//-         img(src=user.avatarURL)
+//-     #userCardRight
+//-         button#signOutButton
+//-             i.fa-sharp.fa-solid.fa-sign-out-alt
+//-         button#userPrefsButton
+//-             i.fa-sharp.fa-solid.fa-cog
+
+#userCard(style=`background: url(${user.bannerURL}) no-repeat center center #000000; background-size: cover;`)
+    #userCardContent
+        span#userImageName
+            img#userCardImage(src=user.avatarURL, alt=`${user.name}'s Avatar`)
+            span#userIntroName 
+                h2
+                    span.thin#userIntro Welcome Back, 
+                    span= user.name
+        ul(style="margin: 0; padding: 0 0.5rem 0.5rem 0.5rem;")
+            li
+                span.statTitle
+                    span Balance:
+                span.statValue.balance
+                    i.fa-sharp.fa-ellipsis
+            li
+                span.statTitle 
+                    span Net Worth:
+                span.statValue.netWorth
+                    i.fa-sharp.fa-ellipsis
+        ul(style="margin: 0; padding: 0 0.5rem 0.5rem 0.5rem;")
+            if (isAdmin)
+                li.admin
+                    span.statEmblem
+                        i.fa-sharp.fa-solid.fa-shield
+            if (hasAlphaAccess)
+                li.alpha
+                    span.statEmblem
+                        i.fa-sharp.fa-solid.fa-star

@@ -19,11 +19,6 @@ html(lang="en")
                 #pageContent
                         .dashboardSectionRow.wideLeft
                             .dashboardSectionCol
-                                .dashboardSection#addFriendSection
-                                    h1.sectionHeader.thin Add Friend
-                                    form#addFriendForm
-                                        input(type="text", id="addFriendInput", placeholder="Enter a username")
-                                        button#addFriendButton Add Friend
                                 .dashboardSection#incomingRequestsSection
                                     h1.sectionHeader.thin Incoming Friend Requests
                                     table#incomingRequestsTable
@@ -61,7 +56,20 @@ html(lang="en")
                                             tr
                                                 td 
                                                     i.fas.fa-ellipsis.fa-flip.fa-beat-fade.fa-2x.center
-
+                            .dashboardSectionCol
+                                .dashboardSection#friendPageDescSection
+                                    h1.sectionHeader.thin About Friends
+                                    p
+                                        | Friends are other players who you have connected with in Chaotic Capital.
+                                        | You can add friends by entering their username in the form below. You can
+                                        | view your friends, incoming friend requests, outgoing friend requests, and
+                                        | blocked users on this page.
+                                //- .dashboardSection#addFriendSection
+                                //-     h1.sectionHeader.thin Add Friend
+                                //-     form#addFriendForm
+                                //-         input(type="text", id="addFriendInput", placeholder="Enter a username")
+                                //-         button#addFriendButton Add Friend
+                                //-     #addFriendStatus
                                     
                                             
 

@@ -1,7 +1,7 @@
 {
   "name": "chaotic-capital",
   "productName": "Chaotic Capital",
-  "version": "0.1.2",
+  "version": "0.1.0-alpha.2",
   "description": "Client application for the Chaotic Capital online game.",
   "main": "src/index.js",
   "scripts": {
@@ -43,9 +43,6 @@
     "electron-squirrel-startup": "^1.0.1",
     "express": "^5.0.1",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.1",
-    "mongoose-long": "^0.8.0",
     "pug": "^3.0.3",
     "sequelize": "^6.37.4",
     "socket.io-client": "^4.8.0",
