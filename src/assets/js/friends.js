@@ -88,7 +88,8 @@ async function populateTables(){
         if (friendsTable) {
             let friendsTableBody = friendsTable.querySelector('tbody');
             friendsTableBody.innerHTML = '';
-            friends.forEach(friend => {
+            console.log(friends);
+            friends.list.forEach(friend => {
                 let row = document.createElement('tr');
                 let icon = document.createElement('td');
                 let name = document.createElement('td');
@@ -101,6 +102,9 @@ async function populateTables(){
                 removeButton.innerHTML = `<i class="fas fa-user-minus"></i>`;
                 removeButton.classList.add('fORURremoveActionButton');
                 removeButton.addEventListener('click', async function(event){
+                    // determine whether the friend is the sender or recipient
+                    let thisFriend = friends.entries.find(entry => entry.user_1 === friend || entry.user_2 === friend);
+                    console.log("THIS FRIEND", thisFriend);
                     await fetch('/api/friends', {
                         method: 'POST',
                         headers: {
@@ -108,8 +112,8 @@ async function populateTables(){
                         },
                         body: JSON.stringify({
                             action: "remove",
-                            sender: friend,
-                            recipient
+                            sender: thisFriend.user_1,
+                            recipient: thisFriend.user_2
                         })
                     }).then(response => response.json().then(data => {
                         populateTables();
