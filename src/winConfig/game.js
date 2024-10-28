@@ -19,7 +19,6 @@ export default function loadGameWindow(){
     minimizable: true,
     fullscreenable: true,
     show: true,
-    backgroundColor: '#000000',
     titleBarStyle: "default",
     transparent: false,
   });
