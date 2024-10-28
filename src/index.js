@@ -16,6 +16,8 @@ import loadDiscordAuthHandler from './winConfig/discord.js';
 import { loader } from './winConfig/loader.js';
 import { gameWindow } from './winConfig/game.js';
 
+import { newNotification } from './global_functions.js';
+
 
 /* To-Do:
  - Fetch user's unlocked workers, their prices, and their purchase status and store it in config.workers (see legacy config for structure)
@@ -306,6 +308,11 @@ function gameOn(){
     ipcMain.handle('serverReq', async (event, msg) => {
         console.log("Main: " + msg);
         return "Main: " + msg;
+    });
+
+    ipcMain.handle('newNotification', async (event, title, body) => {
+        newNotification(title, body);
+        return true;
     });
 }
 
