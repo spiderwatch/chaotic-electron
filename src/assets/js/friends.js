@@ -143,10 +143,21 @@ if (document.querySelector('#addFriendSection')) {
                     action: "send",
                     recipient: friend
                 })
-            }).then(response => response.json().then(data => {
-                console.log(data);
+            }).then(response => {
+                console.log(window)
+                try {
+                    response.json().then(async (reply) => {
+                        console.log(reply)
+                        if (reply.success == false){
+                            // new Notification("Hold on!", { body: reply.message });
+                            await window.electronAPI.newNotification("Hold on!", reply.message);
+                        }
+                    })
+                } catch (error) {
+                    console.log(error)
+                }
                 populateTables();
-            }));
+            });
         } else {
             console.error('No friend specified');
         }

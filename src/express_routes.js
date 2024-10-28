@@ -4,6 +4,9 @@ import path from 'path';
 
 import { thisUser, thisToken, config, socket } from './index.js';
 import { discordAuthWindow } from './winConfig/discord.js';
+
+import { newNotification } from './global_functions.js';
+
 import express from 'express';
 
 const router = Router();
@@ -39,6 +42,7 @@ router.get('/home', (req, res) => {
       hasAlphaAccess: thisUser.access.alpha ?? false,
       isAdmin: thisUser.access.admin ?? false,
       config: config
+      
     });
   } catch (error) {
     console.error(error);
