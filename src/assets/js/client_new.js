@@ -172,9 +172,12 @@ async function generateBackpackCard() {
             if (!userItemTypes.includes(item)) continue;
             let quantity = user.items[item];
             let price = items[item];
-            totalValue += quantity * price;
             if (typeof price !== typeof 1) {
+                price = 0;
+                totalValue += quantity * price;
                 price = "N/S";
+            } else {
+                totalValue += quantity * price;
             }
             tableBody.innerHTML += `<tr><td class="left">${item}</td><td class="right">${quantity}</td><td class="left">${price}</td></tr>`;
         }
