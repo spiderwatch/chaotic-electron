@@ -12,6 +12,7 @@ console.log(__dirname);
 let gameWindow;
 let contextMenu;
 let globalTray;
+let trayUpdateInterval;
 
 function updateTrayMenu(){
   let timeToClaim = nextWorkerClaim - Date.now();
@@ -81,18 +82,18 @@ export default function loadGameWindow(){
     gameWindow.maximize();
   });
 
-  globalTray = new Tray(thisIcon);
+  if (!globalTray) {
+    globalTray = new Tray(thisIcon);
 
-  globalTray.on('click', () => {
-    updateTrayMenu();
-  });
-
-  globalTray.on('right-click', () => {
-    updateTrayMenu();
-  });
+    globalTray.on('click', () => {
+      updateTrayMenu();
+    });
   
-  let lastCheckedClaimTime = nextWorkerClaim
-  setInterval(updateTrayMenu, 15000);
+    globalTray.on('right-click', () => {
+      updateTrayMenu();
+    });
+    trayUpdateInterval = setInterval(updateTrayMenu, 15000);
+  }
 }
 
 export { gameWindow, globalTray, updateTrayMenu };
