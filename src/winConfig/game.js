@@ -28,8 +28,6 @@ function updateTrayMenu(){
             loadGameWindow();
             gameWindow.maximize();
         } else {
-            gameWindow.show();
-            gameWindow.focus();
             gameWindow.maximize();
         }
     }},
@@ -78,10 +76,6 @@ export default function loadGameWindow(){
     gameWindow = null;
   });
 
-  gameWindow.on('show', function () {
-    gameWindow.maximize();
-  });
-
   if (!globalTray) {
     globalTray = new Tray(thisIcon);
 
@@ -94,6 +88,8 @@ export default function loadGameWindow(){
     });
     trayUpdateInterval = setInterval(updateTrayMenu, 15000);
   }
+
+  gameWindow.maximize();
 }
 
 export { gameWindow, globalTray, updateTrayMenu };
