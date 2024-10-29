@@ -180,7 +180,6 @@ function gameOn(){
         socket.on('connect', () => {
             let end = Date.now();
             console.log('Dinner was delivered in ' + (end - start) + 'ms');
-            if (!gameWindow || gameWindow === null) {
             try {
                 db.get("SELECT * FROM token", [], (err, row) => {
                 if (err) {
@@ -196,9 +195,6 @@ function gameOn(){
                 });
             } catch (error) {
                 console.error(error);
-            }
-            } else {
-                gameWindow.webContents.reload();
             }
         });
 
@@ -257,7 +253,7 @@ function gameOn(){
         socket.on('startData', (data) => {
             thisUser = data.user;
             loadGameWindow();
-            loader.close();
+            if (loader && loader !== null) loader.close();
             notifStuff(thisUser);
         })
 
@@ -273,7 +269,7 @@ function gameOn(){
     
         globalTray = new Tray(thisIcon);
         const contextMenu = Menu.buildFromTemplate([
-            { label: "Time until next worker claim" },
+            { label: "Next Claim: " + , enabled: false },
             { label: "Open Chaotic Capital", click: () => {
                 if (!gameWindow || gameWindow === null) {
                     loadGameWindow();

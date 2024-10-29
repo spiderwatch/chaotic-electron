@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy stuff</title>
+    <script src="https://kit.fontawesome.com/cd32c1b6c9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/stl0qpb.css">
+    <link rel="stylesheet" href="/src/assets/css/dummy_dialog_apiLogout.css">
+    <link rel="stylesheet" href="/src/assets/css/dummy_toasts.css">
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            display: flex;
+            margin: 0;
+            background-color: #555;
+            color: white;
+            width: 100%;
+            height: 100%;
+            box-sizing: content-box;
+        }
+        body > *:not(dialog){
+            margin: 0;
+        }
+        #simmedLeftSide{
+            width: 4rem;
+            height: 100%;
+            background-color: #333;
+            transition: 1s;
+        }
+        #simmedLeftSide:hover{
+            width: 40rem;
+        }
+        #simmedContentBlock{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 1s;
+        }
+        #simmedRightSide{
+            width: 4rem;
+            height: 100%;
+            background-color: #333;
+            transition: 1s;
+        }
+        #simmedRightSide:hover{
+            width: 40rem;
+        }
+
+        @media (max-width: 600px) {
+            dialog{
+                max-width: 95%;
+            }
+            dialog #sections{
+                margin: 1rem;
+            }
+            #toastHolder{
+                align-items: center;
+                padding: 0 0 2rem 0;
+                width: 100%;
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <dialog id="logoutModal" class="hidden" closed>
+        <div id="sections">
+            <div id="headerSection">
+                <i class="fak fa-chaotic-capital fa-4x"></i>
+                <h1>Whoops, looks like you've been logged out</h1>
+            </div>
+            <div id="contentSection">
+                <h2>You've been logged out because either your session expired, or you've logged in somewhere else.</h2>
+                <p>To log back in, hit the Log in with Discord button.</p>
+                <div id="loginButtonSection">
+                    <i class="fa-sharp fa-flip fa-beat-fade fa-ellipsis fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </dialog>
+    <div id="simmedLeftSide"></div>
+    <div id="simmedContentBlock">
+        <h1>Welcome to Spider's Playground.</h1>
+
+        <button id="dialogButton">Show Logout Dialog</button>
+        <button id="toastButton">Create a toast</button>
+
+        <div id="toastHolder">
+            <!-- <div class="toast show" id="toast1" popover>
+                <div class="toastIconBlock">
+                    <i class="fa-sharp fa-info-circle fa-2x"></i>
+                </div>
+                <div class="toastContentBlock">
+                    <h4 class="toastHeader">ToastHeader</h4>
+                    <p class="toastContent">ToastContent</p>
+                    <p class="toastContent">Really long toast content block to test the dynamic addition of height to the toast box when the toast content is really long. toast toast toast toast toast</p>
+                </div>
+                <div class="toastActionBlock">
+                    <button class="toastCloseAction">
+                        <i class="fa-sharp fa-times"></i>
+                    </button>
+                </div>
+                <progress class="toastTimer"></progress>
+            </div> -->
+        </div>
+    </div>
+    <div id="simmedRightSide"></div>
+    <script src="/src/assets/js/dummy.js"></script>
+</body>
+</html>

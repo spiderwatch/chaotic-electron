@@ -11,6 +11,11 @@ console.log(__dirname);
 let gameWindow;
 
 export default function loadGameWindow(){
+  if (gameWindow) {
+    gameWindow.webContents.reload();
+    gameWindow.maximize();
+    return;
+  }
   gameWindow = new BrowserWindow({
     webPreferences: {
         contextBridge: true,
