@@ -1,4 +1,7 @@
-async function updateBackpackData() {
+let selection = false;
+let first = true;
+
+async function updateBackpackData() {                                 
     await fetch('/api/me', {
         method: 'GET',
         headers: {
@@ -87,7 +90,8 @@ async function updateBackpackData() {
             //Setup the attributes cell
             let tr2 = document.createElement("tr");
             let td5 = document.createElement("td");
-            tr2.id = `${item}-Row`;
+            let id = item.split(" ").join("_").replaceAll("'", "APOS");
+            tr2.id = `item-${id}-Row`;
             td5.classList.add("attributesCell");
             let ul = document.createElement("ul");
             let li = document.createElement("li");
@@ -109,7 +113,6 @@ async function updateBackpackData() {
             tbody.appendChild(tr);
         }
         
-        setupListeners();
         // // Items is an object with keys as item types and values as quantities
         // for(let itemType in items) {
         //     let quantity = items[itemType];
@@ -121,103 +124,124 @@ async function updateBackpackData() {
         // }
     }));
 
+    updateListeners();
 
 }
 
+function updateListeners() {
+    if (first) {
+        setupListeners();
+        first = false;
+    } else {
+        destroyListeners();
+        setupListeners();
+    }
+}
 
-function setupListeners() {
-    let sellForms = document.querySelectorAll("#sellItemFormBackpack");
 
-    sellForms.forEach((form) => {
-        console.log(form);
-        let sellOneButton = form.querySelector("#sellOne"); 
-        let sellAllButton = form.querySelector("#sellAll");
-        sellOneButton.addEventListener("click", async function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            if (formData.get("itemType") != null){
-                await fetch('/api/items', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "action": "sell",
-                        "type": formData.get("itemType"),
-                        "amount": 1
-                    })
-                }).then(() => {
-                    console.log("items sold, updating data sections");
-                    updateBackpackData();
-                });
-            } else {
-                alert("Please select an item and quantity to sell.");
+async function sellOneButtonListener(e, form) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    if (formData.get("itemType") != null){
+        await fetch('/api/items', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "action": "sell",
+                "type": formData.get("itemType"),
+                "amount": 1
+            })
+        }).then( response => {
+            try {
+                response.json().then(async (reply) => {
+                    console.log(reply)
+                    if (reply.success == false){
+                        // new Notification("Hold on!", { body: reply.message });
+                        await window.electronAPI.newNotification("Error!", reply.message);
+                    } else {
+                        await window.electronAPI.newNotification("Hurray!", `You sold 1 ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                    }
+                })
+            } catch (error) {
+                console.log(error)
             }
+            console.log("items sold, updating data sections");
+            updateBackpackData();
         });
+    } else {
+        alert("Please select an item and quantity to sell.");
+    }
+}
 
-        sellAllButton.addEventListener("click", async function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            let itemRow = document.querySelector(`#${formData.get("itemType")}-Row`);
-            let itemQuantity = itemRow.querySelector("#itemAmount");
-            if (formData.get("itemType") != null){
-                await fetch('/api/items', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "action": "sell",
-                        "type": formData.get("itemType"),
-                        "amount": itemQuantity.innerHTML.split(" ")[1]
-                    })
-                }).then(() => {
-                    console.log("items sold, updating data sections");
-                    updateBackpackData();
-                });
-            } else {
-                alert("Please select an item and quantity to sell.");
+async function sellAllButtonListener(e, form) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    let itemRow = document.querySelector(`#item-${formData.get("itemType").replaceAll(" ", "_").replaceAll("'", "APOS")}-Row`);
+    let itemQuantity = itemRow.querySelector("#itemAmount");
+    if (formData.get("itemType") != null){
+        await fetch('/api/items', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "action": "sell",
+                "type": formData.get("itemType"),
+                "amount": itemQuantity.innerHTML.split(" ")[1]
+            })
+        }).then(response => {
+            try {
+                response.json().then(async (reply) => {
+                    console.log(reply)
+                    if (reply.success == false){
+                        // new Notification("Hold on!", { body: reply.message });
+                        await window.electronAPI.newNotification("Error!", reply.message);
+                    } else {
+                        await window.electronAPI.newNotification("Hurray!", `You sold ${itemQuantity.innerHTML.split(" ")[1]} ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                    }
+                })
+            } catch (error) {
+                console.log(error)
             }
+            console.log("items sold, updating data sections");
+            updateBackpackData();
         });
-    });
+    } else {
+        alert("Please select an item and quantity to sell.");
+    }
+}
 
-    // Select all button
-    let selection = false;
-    let selectAllButton = document.querySelector("#selectAllItem");
-    let selectAllLabel = document.querySelector("#selectAllLabel");
-    selectAllButton.addEventListener("click", function(e) {
-        if(selection === false){
-            selection = true;
-            selectAllLabel.innerHTML = "Deselect All";
-            
-            let checkboxes = document.querySelectorAll("input[type=checkbox]");
-            checkboxes.forEach((checkbox) => {
-                if (checkbox.classList.contains("itemCheckbox")){
-                    checkbox.checked = true;
-                }
-            });
-        } else {
-            selection = false;
-            selectAllLabel.innerHTML = "Select All";
-            let checkboxes = document.querySelectorAll("input[type=checkbox]");
-            checkboxes.forEach((checkbox) => {
-                if (checkbox.classList.contains("itemCheckbox")){
-                    checkbox.checked = false;
-                }
-            });
-        }
+function selectAllButtonListener(e) {
+    if(selection === false){
+        selection = true;
+        selectAllLabel.innerHTML = "Deselect All";
         
-    });
+        let checkboxes = document.querySelectorAll("input[type=checkbox]");
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.classList.contains("itemCheckbox")){
+                checkbox.checked = true;
+            }
+        });
+    } else {
+        selection = false;
+        selectAllLabel.innerHTML = "Select All";
+        let checkboxes = document.querySelectorAll("input[type=checkbox]");
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.classList.contains("itemCheckbox")){
+                checkbox.checked = false;
+            }
+        });
+    }
 }
 
-setupListeners();
-
-
-let quickSellAllButton = document.querySelector("#quickSellButton");
-quickSellAllButton.addEventListener("click", async function(e) {
+async function quickSellAllButtonListener(e) {
     e.preventDefault();
     let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
     let items = [];
+    let profits = 0;
+    let amounts = [];
     checkboxes.forEach((checkbox) => {
         if (checkbox.classList.contains("itemCheckbox")){
             items.push(checkbox.value);
@@ -225,9 +249,12 @@ quickSellAllButton.addEventListener("click", async function(e) {
     });
     console.log(items);
     if (items.length > 0) {
-        for (let item of items) {
-            let itemRow = document.querySelector(`#${item}-Row`);
+        for (let i = 0; i < items.length; i++) {
+            console.log(items[i]);
+            let search = `#item-${items[i].replaceAll(" ", "_").replaceAll("'", "APOS")}-Row`;
+            let itemRow = document.querySelector(search);
             let itemQuantity = itemRow.querySelector("#itemAmount");
+            amounts.push(itemQuantity.innerHTML.split(" ")[1]);
             await fetch('/api/items', {
                 method: 'POST',
                 headers: {
@@ -235,16 +262,104 @@ quickSellAllButton.addEventListener("click", async function(e) {
                 },
                 body: JSON.stringify({
                     "action": "sell",
-                    "type": item,
+                    "type": items[i],
                     "amount": itemQuantity.innerHTML.split(" ")[1]
                 })
-            }).then(() => {
-                console.log("items sold, updating data sections");
-                updateBackpackData();
-            });
+            }).then(response => {
+                response.json().then(async (reply) => {
+                    console.log(reply);
+                    if (reply.success == false) {
+                        // Do nothing
+                    } else {
+                        console.log("Adding profit");
+                        console.log(reply.profit);
+                        profits += reply.profit;
+                        console.log(profits);
+                    }
+                });
+                
+            })
         }
+        updateBackpackData();
+        try {
+            let msgs = [];
+            for (let i = 0; i < items.length; i++) {
+                msgs.push(`${amounts[i]} ${items[i]}`);
+            }
+            let msg = msgs.join(", ");
+            await window.electronAPI.newNotification("Hurray!", `You sold ${msg} for ⵇ ${profits}.`);
+        } catch (error) {
+            console.log(error)
+        }
+        console.log("items sold, updating data sections");
     } else {
         alert("Please select an item and quantity to sell.");
     }
-});
+}
+
+function setupListeners() {
+    let sellForms = document.querySelectorAll("#sellItemFormBackpack");
+
+    sellForms.forEach((form) => {
+        //console.log(form);
+        let sellOneButton = form.querySelector("#sellOne"); 
+        let sellAllButton = form.querySelector("#sellAll");
+        sellOneButton.addEventListener("click", (e) => {
+            sellOneButtonListener(e, form);
+        });
+
+        sellAllButton.addEventListener("click", (e) => { 
+            sellAllButtonListener(e, form)
+        });
+    });
+
+    // Select all button
+    let selectAllButton = document.querySelector("#selectAllItem");
+    let selectAllLabel = document.querySelector("#selectAllLabel");
+    selection = false;
+    selectAllLabel.innerHTML = "Select All";
+    selectAllButton.checked = false;
+    let checkboxes = document.querySelectorAll("input[type=checkbox]");
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.classList.contains("itemCheckbox")){
+            checkbox.checked = false;
+        }
+    });
+    selectAllButton.addEventListener("click", selectAllButtonListener);
+
+    let quickSellAllButton = document.querySelector("#quickSellButton");
+    quickSellAllButton.addEventListener("click", quickSellAllButtonListener);
+}
+
+function destroyListeners() {
+    let sellForms = document.querySelectorAll("#sellItemFormBackpack");
+
+    sellForms.forEach((form) => {
+        //console.log(form);
+        let sellOneButton = form.querySelector("#sellOne"); 
+        let sellAllButton = form.querySelector("#sellAll");
+        sellOneButton.removeEventListener("click", (e) => {
+            sellOneButtonListener(e, form);
+        });
+
+        sellAllButton.removeEventListener("click", (e) => { 
+            sellAllButtonListener(e, form)
+        });
+    });
+
+    // Select all button
+    let selectAllButton = document.querySelector("#selectAllItem");
+    let selectAllLabel = document.querySelector("#selectAllLabel");
+    selectAllButton.removeEventListener("click", selectAllButtonListener);
+
+    let quickSellAllButton = document.querySelector("#quickSellButton");
+    quickSellAllButton.removeEventListener("click", quickSellAllButtonListener);
+}
+
+
+// setupListeners();
+updateBackpackData();
+
+
+
 

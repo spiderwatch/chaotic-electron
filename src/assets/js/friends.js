@@ -37,9 +37,22 @@ async function populateTables(){
                             sender: request.user_1,
                             recipient: request.user_2
                         })
-                    }).then(response => response.json().then(data => {
+                    }).then(response =>  {
+                        try {
+                            response.json().then(async (reply) => {
+                                console.log(reply)
+                                if (reply.success == false){
+                                    // new Notification("Hold on!", { body: reply.message });
+                                    await window.electronAPI.newNotification("Hold on!", reply.message);
+                                } else {
+                                    await window.electronAPI.newNotification("Hurray!", reply.message);
+                                }
+                            })
+                        } catch (error) {
+                            console.log(error)
+                        }
                         populateTables();
-                    }));
+                    });
                 });
                 accept.appendChild(acceptButton);
                 row.appendChild(accept);
@@ -74,9 +87,22 @@ async function populateTables(){
                             sender: request.user_1,
                             recipient: request.user_2
                         })
-                    }).then(response => response.json().then(data => {
+                    }).then(response =>  {
+                        try {
+                            response.json().then(async (reply) => {
+                                console.log(reply)
+                                if (reply.success == false){
+                                    // new Notification("Hold on!", { body: reply.message });
+                                    await window.electronAPI.newNotification("Hold on!", reply.message);
+                                } else {
+                                    await window.electronAPI.newNotification("Hurray!", reply.message);
+                                }
+                            })
+                        } catch (error) {
+                            console.log(error)
+                        }
                         populateTables();
-                    }));
+                    });
                 });
                 actionsCell.appendChild(cancelButton);
                 row.appendChild(actionsCell);
@@ -115,9 +141,22 @@ async function populateTables(){
                             sender: thisFriend.user_1,
                             recipient: thisFriend.user_2
                         })
-                    }).then(response => response.json().then(data => {
+                    }).then(response => {
+                        try {
+                            response.json().then(async (reply) => {
+                                console.log(reply)
+                                if (reply.success == false){
+                                    // new Notification("Hold on!", { body: reply.message });
+                                    await window.electronAPI.newNotification("Hold on!", reply.message);
+                                } else {
+                                    await window.electronAPI.newNotification("Hurray!", reply.message);
+                                }
+                            })
+                        } catch (error) {
+                            console.log(error)
+                        }
                         populateTables();
-                    }));
+                    });
                 });
                 actionsCell.appendChild(removeButton);
                 row.appendChild(actionsCell);
@@ -151,6 +190,8 @@ if (document.querySelector('#addFriendSection')) {
                         if (reply.success == false){
                             // new Notification("Hold on!", { body: reply.message });
                             await window.electronAPI.newNotification("Hold on!", reply.message);
+                        } else {
+                            await window.electronAPI.newNotification("Hurray!", reply.message);
                         }
                     })
                 } catch (error) {
