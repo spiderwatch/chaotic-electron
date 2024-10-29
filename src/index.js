@@ -89,10 +89,10 @@ if (!isFirstInstance) {
 
 async function syslog(toLog, color){
     if (!color) {
-        console.log(`[${new Date().toISOString()}] ${toLog}`);
+        console.log(`[${new Date().toISOString()}]${toLog}`);
         return;
     }
-    console.log(color(`[${new Date().toISOString()}] ${toLog}`));
+    console.log(color(`[${new Date().toISOString()}]${toLog}`));
 }
 
 function apiSocket(endpoint, data, method, req, res){
@@ -101,7 +101,6 @@ function apiSocket(endpoint, data, method, req, res){
             resolve(data);
         });
     });
-    console.log("API: " + endpoint);
     socket.emit(endpoint, data, method);
     thisWaitingPromise.then((data) => {
         res.send(data);
@@ -111,7 +110,6 @@ function apiSocket(endpoint, data, method, req, res){
 }
   
 function notifStuff(){
-    console.log("Checking for notifications...");
     let thisToken;
     db.get("SELECT * FROM token", [], (err, row) => {
         if (err) {
@@ -123,16 +121,14 @@ function notifStuff(){
             apiSocket('me', {
                 auth: thisToken
             }, "GET", {}, {
-                send: (data) => {
-                    console.log(data);
-                }
+                send: (data) => {}
             }).then((meData) => {
                 let thisIsMe = meData.user;
                 thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
                 nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
                 let now = new Date().getTime();
                 let distance = nextWorkerClaim - now;
-                syslog("Next worker claim in " + distance + "ms", colors.green);
+                syslog("[NOTIF] Next worker claim in " + distance + "ms");
                 if (distance <= 0) {
                     nextWorkerClaimTimer = setTimeout(() => {  
                         // nextWorkerClaim is a UNIX timestamp
@@ -163,7 +159,7 @@ function gameOn(){
     server.set('views', path.join(import.meta.dirname, 'render'));
     server.use(express.json());
     server.use((req, res, next) => {
-        syslog(`${req.method} ${req.url}`, colors.green);
+        syslog(`[SERVR][${req.method}] ${req.url}`, colors.green);
         next();
     });
 
@@ -309,7 +305,6 @@ function gameOn(){
 let lastNotification = 0;
 function claimNotification(timer){
     if (Date.now() - lastNotification < (nextWorkerClaimTimerInterval)) {
-        console.log("Notification already sent within the last interval (" + nextWorkerClaimTimerInterval + "): " + (Date.now() - lastNotification));
         setTimeout(() => {
             notifStuff();
         }, (nextWorkerClaimTimerInterval - (Date.now() - lastNotification)));

@@ -38,7 +38,7 @@ function updateTrayMenu(){
   globalTray.setContextMenu(contextMenu);
   globalTray.setToolTip('Chaotic Capital');
 
-  syslog("Updated Tray; New timer: " + `${ claimable ? "Workers are ready to claim!" : ("Next claim in: " + ( Math.floor((timeToClaim % 3600000) / 3600000) < 1 ? "" : Math.floor((timeToClaim % 3600000) / 3600000).toString() + "h" ) + ( Math.floor((timeToClaim % 3600000) / 60000) < 1 ? "<1m" : ( Math.floor((timeToClaim % 3600000) / 3600000) < 1 ? Math.floor((timeToClaim % 3600000) / 60000).toString() + "m" : ", " + Math.floor((timeToClaim % 3600000) / 60000).toString() + "m" ) ))}`);
+  syslog("[SYSTM] Updated Tray; New timer: " + `${ claimable ? "Workers are ready to claim!" : ("Next claim in: " + ( Math.floor((timeToClaim % 3600000) / 3600000) < 1 ? "" : Math.floor((timeToClaim % 3600000) / 3600000).toString() + "h" ) + ( Math.floor((timeToClaim % 3600000) / 60000) < 1 ? "<1m" : ( Math.floor((timeToClaim % 3600000) / 3600000) < 1 ? Math.floor((timeToClaim % 3600000) / 60000).toString() + "m" : ", " + Math.floor((timeToClaim % 3600000) / 60000).toString() + "m" ) ))}`);
 }
 
 export default function loadGameWindow(){
