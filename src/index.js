@@ -11,7 +11,7 @@ import fs from 'node:fs';
 
 import defaultRouter from './express_routes.js';
 import openLoader from './winConfig/loader.js';
-import loadGameWindow from './winConfig/game.js';
+import loadGameWindow, { updateTrayMenu } from './winConfig/game.js';
 import loadDiscordAuthHandler from './winConfig/discord.js';
 
 import { loader } from './winConfig/loader.js';
@@ -88,6 +88,10 @@ if (!isFirstInstance) {
 }
 
 async function syslog(toLog, color){
+    if (!color) {
+        console.log(`[${new Date().toISOString()}] ${toLog}`);
+        return;
+    }
     console.log(color(`[${new Date().toISOString()}] ${toLog}`));
 }
 
@@ -101,6 +105,7 @@ function apiSocket(endpoint, data, method, req, res){
     socket.emit(endpoint, data, method);
     thisWaitingPromise.then((data) => {
         res.send(data);
+        updateTrayMenu();
     });
     return thisWaitingPromise;
 }
@@ -124,7 +129,7 @@ function notifStuff(){
             }).then((meData) => {
                 let thisIsMe = meData.user;
                 thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
-                let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
+                nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
                 let now = new Date().getTime();
                 let distance = nextWorkerClaim - now;
                 syslog("Next worker claim in " + distance + "ms", colors.green);
@@ -253,7 +258,7 @@ function gameOn(){
         socket.on('startData', (data) => {
             thisUser = data.user;
             loadGameWindow();
-            if (loader && loader !== null) loader.close();
+            if (!loader.isDestroyed()) loader.close();
             notifStuff(thisUser);
         })
 
@@ -265,27 +270,8 @@ function gameOn(){
         
         socket.on('me', (data) => {
             thisUser = data.user;
+            nextWorkerClaim = new Date(data.nextWorkerClaim).getTime();
         });
-    
-        globalTray = new Tray(thisIcon);
-        const contextMenu = Menu.buildFromTemplate([
-            { label: "Next Claim: " + , enabled: false },
-            { label: "Open Chaotic Capital", click: () => {
-                if (!gameWindow || gameWindow === null) {
-                    loadGameWindow();
-                    gameWindow.maximize();
-                } else {
-                    gameWindow.show();
-                    gameWindow.focus();
-                    gameWindow.maximize();
-                }
-            }},
-            { label: "Quit", click: () => {
-                app.quit();
-            }}
-        ]);
-        globalTray.setToolTip('This is my application.');
-        globalTray.setContextMenu(contextMenu);
     });
 
     app.on('activate', function () {
@@ -350,4 +336,4 @@ function claimNotification(timer){
     clearInterval(timer);
 }
 
-export { thisUser, thisToken, thisIcon, config, socket };
+export { thisUser, thisToken, thisIcon, config, socket, nextWorkerClaim, nextWorkerClaimTimerInterval, globalTray, syslog };
