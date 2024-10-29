@@ -11,7 +11,7 @@ import fs from 'node:fs';
 
 import defaultRouter from './express_routes.js';
 import openLoader from './winConfig/loader.js';
-import loadGameWindow from './winConfig/game.js';
+import loadGameWindow, { updateTrayMenu } from './winConfig/game.js';
 import loadDiscordAuthHandler from './winConfig/discord.js';
 
 import { loader } from './winConfig/loader.js';
@@ -88,7 +88,11 @@ if (!isFirstInstance) {
 }
 
 async function syslog(toLog, color){
-    console.log(color(`[${new Date().toISOString()}] ${toLog}`));
+    if (!color) {
+        console.log(`[${new Date().toISOString()}]${toLog}`);
+        return;
+    }
+    console.log(color(`[${new Date().toISOString()}]${toLog}`));
 }
 
 function apiSocket(endpoint, data, method, req, res){
@@ -97,16 +101,15 @@ function apiSocket(endpoint, data, method, req, res){
             resolve(data);
         });
     });
-    console.log("API: " + endpoint);
     socket.emit(endpoint, data, method);
     thisWaitingPromise.then((data) => {
         res.send(data);
+        updateTrayMenu();
     });
     return thisWaitingPromise;
 }
   
 function notifStuff(){
-    console.log("Checking for notifications...");
     let thisToken;
     db.get("SELECT * FROM token", [], (err, row) => {
         if (err) {
@@ -118,16 +121,14 @@ function notifStuff(){
             apiSocket('me', {
                 auth: thisToken
             }, "GET", {}, {
-                send: (data) => {
-                    console.log(data);
-                }
+                send: (data) => {}
             }).then((meData) => {
                 let thisIsMe = meData.user;
                 thisIsMe.nextWorkerClaim = meData.nextWorkerClaim;
-                let nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
+                nextWorkerClaim = new Date(thisIsMe.nextWorkerClaim).getTime();
                 let now = new Date().getTime();
                 let distance = nextWorkerClaim - now;
-                syslog("Next worker claim in " + distance + "ms", colors.green);
+                syslog("[NOTIF] Next worker claim in " + distance + "ms");
                 if (distance <= 0) {
                     nextWorkerClaimTimer = setTimeout(() => {  
                         // nextWorkerClaim is a UNIX timestamp
@@ -158,7 +159,7 @@ function gameOn(){
     server.set('views', path.join(import.meta.dirname, 'render'));
     server.use(express.json());
     server.use((req, res, next) => {
-        syslog(`${req.method} ${req.url}`, colors.green);
+        syslog(`[SERVR][${req.method}] ${req.url}`, colors.green);
         next();
     });
 
@@ -180,7 +181,6 @@ function gameOn(){
         socket.on('connect', () => {
             let end = Date.now();
             console.log('Dinner was delivered in ' + (end - start) + 'ms');
-            if (!gameWindow || gameWindow === null) {
             try {
                 db.get("SELECT * FROM token", [], (err, row) => {
                 if (err) {
@@ -196,9 +196,6 @@ function gameOn(){
                 });
             } catch (error) {
                 console.error(error);
-            }
-            } else {
-                gameWindow.webContents.reload();
             }
         });
 
@@ -257,7 +254,7 @@ function gameOn(){
         socket.on('startData', (data) => {
             thisUser = data.user;
             loadGameWindow();
-            loader.close();
+            if (!loader.isDestroyed()) loader.close();
             notifStuff(thisUser);
         })
 
@@ -269,27 +266,8 @@ function gameOn(){
         
         socket.on('me', (data) => {
             thisUser = data.user;
+            nextWorkerClaim = new Date(data.nextWorkerClaim).getTime();
         });
-    
-        globalTray = new Tray(thisIcon);
-        const contextMenu = Menu.buildFromTemplate([
-            { label: "Time until next worker claim" },
-            { label: "Open Chaotic Capital", click: () => {
-                if (!gameWindow || gameWindow === null) {
-                    loadGameWindow();
-                    gameWindow.maximize();
-                } else {
-                    gameWindow.show();
-                    gameWindow.focus();
-                    gameWindow.maximize();
-                }
-            }},
-            { label: "Quit", click: () => {
-                app.quit();
-            }}
-        ]);
-        globalTray.setToolTip('This is my application.');
-        globalTray.setContextMenu(contextMenu);
     });
 
     app.on('activate', function () {
@@ -327,7 +305,6 @@ function gameOn(){
 let lastNotification = 0;
 function claimNotification(timer){
     if (Date.now() - lastNotification < (nextWorkerClaimTimerInterval)) {
-        console.log("Notification already sent within the last interval (" + nextWorkerClaimTimerInterval + "): " + (Date.now() - lastNotification));
         setTimeout(() => {
             notifStuff();
         }, (nextWorkerClaimTimerInterval - (Date.now() - lastNotification)));
@@ -354,4 +331,4 @@ function claimNotification(timer){
     clearInterval(timer);
 }
 
-export { thisUser, thisToken, thisIcon, config, socket };
+export { thisUser, thisToken, thisIcon, config, socket, nextWorkerClaim, nextWorkerClaimTimerInterval, globalTray, syslog };
