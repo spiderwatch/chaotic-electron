@@ -331,4 +331,4 @@ function claimNotification(timer){
     clearInterval(timer);
 }
 
-export { thisUser, thisToken, thisIcon, config, socket, nextWorkerClaim, nextWorkerClaimTimerInterval, globalTray, syslog };
+export { thisUser, thisToken, thisIcon, config, socket, nextWorkerClaim, nextWorkerClaimTimerInterval, globalTray, syslog, app };

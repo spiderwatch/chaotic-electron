@@ -1,6 +1,6 @@
 import { BrowserWindow, Tray, Menu } from 'electron';
 import path from 'node:path';
-import { thisIcon, nextWorkerClaim, syslog } from '../index.js';
+import { thisIcon, nextWorkerClaim, syslog, app } from '../index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import colors from 'colors';
