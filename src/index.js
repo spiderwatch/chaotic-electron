@@ -268,6 +268,10 @@ function gameOn(){
             thisUser = data.user;
             nextWorkerClaim = new Date(data.nextWorkerClaim).getTime();
         });
+
+        socket.on('newNotification', (data) => {
+            newNotification(data.title, data.body);
+        });
     });
 
     app.on('activate', function () {

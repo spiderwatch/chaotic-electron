@@ -90,7 +90,7 @@ async function updateBackpackData() {
             //Setup the attributes cell
             let tr2 = document.createElement("tr");
             let td5 = document.createElement("td");
-            let id = item.split(" ").join("_").replaceAll("'", "APOS");
+            let id = item.split(" ").join("_").replaceAll("'", "APOS").replaceAll("+", "PLUS");
             tr2.id = `item-${id}-Row`;
             td5.classList.add("attributesCell");
             let ul = document.createElement("ul");
@@ -159,9 +159,11 @@ async function sellOneButtonListener(e, form) {
                     console.log(reply)
                     if (reply.success == false){
                         // new Notification("Hold on!", { body: reply.message });
-                        await window.electronAPI.newNotification("Error!", reply.message);
+                        //await window.electronAPI.newNotification("Error!", reply.message);
+                        toast("Error!", reply.message, "fa-exclamation-triangle");
                     } else {
-                        await window.electronAPI.newNotification("Hurray!", `You sold 1 ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                        //await window.electronAPI.newNotification("Hurray!", `You sold 1 ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                        toast("Hurray!", `You sold 1 ${formData.get("itemType")} for ⵇ ${reply.profit}.`, "fa-coins");
                     }
                 })
             } catch (error) {
@@ -178,7 +180,7 @@ async function sellOneButtonListener(e, form) {
 async function sellAllButtonListener(e, form) {
     e.preventDefault();
     const formData = new FormData(form);
-    let itemRow = document.querySelector(`#item-${formData.get("itemType").replaceAll(" ", "_").replaceAll("'", "APOS")}-Row`);
+    let itemRow = document.querySelector(`#item-${formData.get("itemType").replaceAll(" ", "_").replaceAll("'", "APOS").replaceAll("+", "PLUS")}-Row`);
     let itemQuantity = itemRow.querySelector("#itemAmount");
     if (formData.get("itemType") != null){
         await fetch('/api/items', {
@@ -197,9 +199,11 @@ async function sellAllButtonListener(e, form) {
                     console.log(reply)
                     if (reply.success == false){
                         // new Notification("Hold on!", { body: reply.message });
-                        await window.electronAPI.newNotification("Error!", reply.message);
+                        //await window.electronAPI.newNotification("Error!", reply.message);
+                        toast("Error!", reply.message, "fa-exclamation-triangle");
                     } else {
-                        await window.electronAPI.newNotification("Hurray!", `You sold ${itemQuantity.innerHTML.split(" ")[1]} ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                        //await window.electronAPI.newNotification("Hurray!", `You sold ${itemQuantity.innerHTML.split(" ")[1]} ${formData.get("itemType")} for ⵇ ${reply.profit}.`);
+                        toast("Hurray!", `You sold ${itemQuantity.innerHTML.split(" ")[1]} ${formData.get("itemType")} for ⵇ ${reply.profit}.`, "fa-coins");
                     }
                 })
             } catch (error) {
@@ -236,37 +240,26 @@ function selectAllButtonListener(e) {
     }
 }
 
-async function quickSellAllButtonListener(e) {
-    e.preventDefault();
-    let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
-    let items = [];
-    let profits = 0;
-    let amounts = [];
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.classList.contains("itemCheckbox")){
-            items.push(checkbox.value);
-        }
-    });
-    console.log(items);
-    if (items.length > 0) {
-        for (let i = 0; i < items.length; i++) {
-            console.log(items[i]);
-            let search = `#item-${items[i].replaceAll(" ", "_").replaceAll("'", "APOS")}-Row`;
-            let itemRow = document.querySelector(search);
-            let itemQuantity = itemRow.querySelector("#itemAmount");
-            amounts.push(itemQuantity.innerHTML.split(" ")[1]);
-            await fetch('/api/items', {
+function promiseToSell(items, amounts) {
+    // Ace has decreed that we must sell items one by one or else the server will
+    // return the wrong messages because we asked too fast.
+    return new Promise((resolve, reject) => {
+        let it_len = items.length;
+        let profits = 0;
+
+        function next(it){
+            fetch('/api/items', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     "action": "sell",
-                    "type": items[i],
-                    "amount": itemQuantity.innerHTML.split(" ")[1]
+                    "type": items[it],
+                    "amount": amounts[it]
                 })
             }).then(response => {
-                response.json().then(async (reply) => {
+                response.json().then((reply) => {
                     console.log(reply);
                     if (reply.success == false) {
                         // Do nothing
@@ -276,21 +269,48 @@ async function quickSellAllButtonListener(e) {
                         profits += reply.profit;
                         console.log(profits);
                     }
+                    if (it == it_len-1) {
+                        resolve(profits);
+                    } else {
+                        next(it+1);
+                    }
                 });
-                
-            })
+            });
+        };
+        next(0);
+    });
+}
+
+async function quickSellAllButtonListener(e) {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+    let items = [];
+    let amounts = [];
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.classList.contains("itemCheckbox")){
+            items.push(checkbox.value);
         }
-        updateBackpackData();
-        try {
+    });
+    console.log(items);
+    if (items.length > 0) {
+        let promises = [];
+        for (let i = 0; i < items.length; i++) {
+            let search = `#item-${items[i].replaceAll(" ", "_").replaceAll("'", "APOS").replaceAll("+", "PLUS")}-Row`;
+            let itemRow = document.querySelector(search);
+            let itemQuantity = itemRow.querySelector("#itemAmount");
+            amounts.push(itemQuantity.innerHTML.split(" ")[1]);
+        }
+        await promiseToSell(items, amounts).then(async (profits) => {
             let msgs = [];
             for (let i = 0; i < items.length; i++) {
                 msgs.push(`${amounts[i]} ${items[i]}`);
             }
             let msg = msgs.join(", ");
-            await window.electronAPI.newNotification("Hurray!", `You sold ${msg} for ⵇ ${profits}.`);
-        } catch (error) {
-            console.log(error)
-        }
+            //await window.electronAPI.newNotification("Hurray!", `You sold ${msg} for ⵇ ${profits}.`);
+            toast("Hurray!", `You sold ${msg} for ⵇ ${profits.toFixed(2)}.`, "fa-coins");
+            updateBackpackData();
+        });
+        
         console.log("items sold, updating data sections");
     } else {
         alert("Please select an item and quantity to sell.");
