@@ -578,14 +578,13 @@ if (claimAllButton){
                     if (reply.success == false){
                         toast("Hold on...", reply.message, "fa-exclamation-triangle");
                     } else {
-                        let star = getClaimMsg(reply.claims)
-                        toast("Hurray!", "Workers Claimed", "fa-check-circle");
+                        toast(`Message from ${reply.claim_msg.worker}!`, reply.claim_msg.msg, "fa-check-circle");
                     }
                     console.log("all workers claimed, updating data sections");
-                    updateDataSections(true);
-                    claimAllButton.innerHTML = "Claim From Workers";
-                    claimAllButton.removeAttribute("disabled");
                 })
+                updateDataSections(true);
+                claimAllButton.innerHTML = "Claim From Workers";
+                claimAllButton.removeAttribute("disabled");
             } catch (error) {
                 console.log(error)
             }

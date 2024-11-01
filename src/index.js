@@ -269,8 +269,11 @@ function gameOn(){
             nextWorkerClaim = new Date(data.nextWorkerClaim).getTime();
         });
 
-        socket.on('newNotification', (data) => {
-            newNotification(data.title, data.body);
+        socket.on('event', (data) => {
+            if (data.type == "broadcast"){
+                newNotification(data.title, data.body);
+            }
+            
         });
     });
 
