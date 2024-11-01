@@ -571,11 +571,24 @@ if (claimAllButton){
                 "action": "claim",
                 "claimType": "quickAll"
             })
-        }).then(() => {
-            console.log("all workers claimed, updating data sections");
-            updateDataSections(true);
-            claimAllButton.innerHTML = "Claim From Workers";
-            claimAllButton.removeAttribute("disabled");
+        }).then((response) => {
+            try {
+                response.json().then(async (reply) => {
+                    console.log(reply)
+                    if (reply.success == false){
+                        toast("Hold on...", reply.message, "fa-exclamation-triangle");
+                    } else {
+                        let star = getClaimMsg(reply.claims)
+                        toast("Hurray!", "Workers Claimed", "fa-check-circle");
+                    }
+                    console.log("all workers claimed, updating data sections");
+                    updateDataSections(true);
+                    claimAllButton.innerHTML = "Claim From Workers";
+                    claimAllButton.removeAttribute("disabled");
+                })
+            } catch (error) {
+                console.log(error)
+            }
         });
     });
 }
