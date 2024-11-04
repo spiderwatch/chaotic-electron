@@ -434,9 +434,21 @@ if (workerHireCard){
                     "type": formData.get("workerType"),
                     "amount": parseInt(formData.get("workerQuantity"))
                 })
-            }).then(() => {
-                console.log("workers hired, updating data sections");
-                updateDataSections(true);
+            }).then((response) => {
+                try {
+                    response.json().then(async (reply) => {
+                        if (reply.success == false){
+                            toast("Hold on...", reply.message, "fa-exclamation-triangle");
+                        } else {
+                            console.log("workers hired, updating data sections");
+                            toast(`Success!`, `Hired ${parseInt(formData.get("workerQuantity"))} ${formData.get("workerType")}!`, "fa-check-circle");
+                        }
+                    })
+                    updateDataSections(true);
+                } catch (error) {
+                    console.log(error)
+                }
+                
             });
         } else {
             alert("Please select a worker and quantity to hire.");
@@ -578,14 +590,13 @@ if (claimAllButton){
                     if (reply.success == false){
                         toast("Hold on...", reply.message, "fa-exclamation-triangle");
                     } else {
-                        let star = getClaimMsg(reply.claims)
-                        toast("Hurray!", "Workers Claimed", "fa-check-circle");
+                        toast(`Message from ${reply.claim_msg.worker}!`, reply.claim_msg.msg, "fa-check-circle");
                     }
                     console.log("all workers claimed, updating data sections");
-                    updateDataSections(true);
-                    claimAllButton.innerHTML = "Claim From Workers";
-                    claimAllButton.removeAttribute("disabled");
                 })
+                updateDataSections(true);
+                claimAllButton.innerHTML = "Claim From Workers";
+                claimAllButton.removeAttribute("disabled");
             } catch (error) {
                 console.log(error)
             }

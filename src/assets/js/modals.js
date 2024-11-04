@@ -37,7 +37,7 @@ async function toast(header, content, faIcon) {
     let toastTimer = document.createElement('progress');
     toastTimer.classList.add('toastTimer');
     toastTimer.value = 0;
-    toastTimer.max = 5000;
+    toastTimer.max = 15000;
     toast.appendChild(toastTimer);
     
     let thisToast = toastHolder.appendChild(toast);
@@ -50,7 +50,7 @@ async function toast(header, content, faIcon) {
     setTimeout(() => {
         clearInterval(thisTimer);
         thisToast.remove();
-    }, 5000);
+    }, 15000);
 
     action.addEventListener('click', () => {
         clearInterval(thisTimer);
