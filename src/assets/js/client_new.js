@@ -434,9 +434,21 @@ if (workerHireCard){
                     "type": formData.get("workerType"),
                     "amount": parseInt(formData.get("workerQuantity"))
                 })
-            }).then(() => {
-                console.log("workers hired, updating data sections");
-                updateDataSections(true);
+            }).then((response) => {
+                try {
+                    response.json().then(async (reply) => {
+                        if (reply.success == false){
+                            toast("Hold on...", reply.message, "fa-exclamation-triangle");
+                        } else {
+                            console.log("workers hired, updating data sections");
+                            toast(`Success!`, `Hired ${parseInt(formData.get("workerQuantity"))} ${formData.get("workerType")}!`, "fa-check-circle");
+                        }
+                    })
+                    updateDataSections(true);
+                } catch (error) {
+                    console.log(error)
+                }
+                
             });
         } else {
             alert("Please select a worker and quantity to hire.");
