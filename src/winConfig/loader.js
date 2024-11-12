@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import path from 'node:path';
-import { thisIcon } from '../index.js';
+import { thisIcon, config } from '../index.js';
 
 let loader;
 
@@ -15,7 +15,7 @@ export default function openLoader() {
     resizable: false,
     autoHideMenuBar: true,
     icon: thisIcon,
-    title: "Chaotic Capital"
+    title: config.gameTitle
   });
 
   loader.loadFile(path.join(import.meta.dirname, '../loader.html'));
