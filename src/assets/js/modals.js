@@ -44,8 +44,9 @@ async function toast(header, content, faIcon) {
     thisToast.classList.add('show');
 
     let thisTimer = setInterval(() => {
-        toastTimer.value += 5;
-    }, 1);
+        toastTimer.value += 10;
+        console.log(toastTimer.value + '/' + toastTimer.max);
+    }, 10);
 
     setTimeout(() => {
         clearInterval(thisTimer);

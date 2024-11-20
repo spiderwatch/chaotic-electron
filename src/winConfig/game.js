@@ -1,6 +1,6 @@
 import { BrowserWindow, Tray, Menu } from 'electron';
 import path from 'node:path';
-import { thisIcon, nextWorkerClaim, syslog, app } from '../index.js';
+import { thisIcon, nextWorkerClaim, syslog, app, config } from '../index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import colors from 'colors';
@@ -58,7 +58,7 @@ export default function loadGameWindow(){
     resizable: true,
     autoHideMenuBar: true,
     icon: thisIcon,
-    title: "Chaotic Capital",
+    title: config.gameTitle,
     maximizable: true,
     minimizable: true,
     fullscreenable: true,

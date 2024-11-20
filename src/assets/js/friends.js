@@ -1,75 +1,26 @@
-async function populateTables(){
-    await fetch('/api/friends', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(response => response.json().then(data => {
-        let { friends, inbound_requests, outbound_requests } = data;
-        let incomingSection = document.querySelector('#incomingRequestsSection');
-        if (incomingSection) {
-            let incomingTable = document.querySelector('#incomingRequestsTable');
-            let incomingTableBody = incomingTable.querySelector('tbody');
-            incomingTableBody.innerHTML = '';
-            if (inbound_requests.length === 0) {
-                incomingSection.style.display = 'none';
-            }
-            inbound_requests.forEach(request => {
+function populateOutgoing(outgoingReqs){
+    console.log(outgoingReqs);
+    let outgoingLength = outgoingReqs.length;
+    let outgoingTable = document.querySelector('#outgoingRequestsTable');
+    let outgoingTableBody = outgoingTable.querySelector('tbody');
+    outgoingTableBody.innerHTML = '';
+    return new Promise((resolve, reject) => {
+        function next(i){
+            fetch('/api/assets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    target: outgoingReqs[i].user_2
+                })
+            }).then(response => response.json()).then((userIconSet) => {
                 let row = document.createElement('tr');
                 let icon = document.createElement('td');
                 let name = document.createElement('td');
-                icon.innerHTML = `<i class="fas fa-user-plus"></i>`;
-                name.innerText = request.user_1;
-                row.appendChild(icon);
-                row.appendChild(name);
-                let accept = document.createElement('td');
-                let acceptButton = document.createElement('button');
-                acceptButton.innerHTML = `<i class="fas fa-check"></i>`; 
-                acceptButton.classList.add('fORURacceptActionButton');
-                acceptButton.addEventListener('click', async function(event){
-                    await fetch('/api/friends', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            action: "accept",
-                            sender: request.user_1,
-                            recipient: request.user_2
-                        })
-                    }).then(response =>  {
-                        try {
-                            response.json().then(async (reply) => {
-                                console.log(reply)
-                                if (reply.success == false){
-                                    // new Notification("Hold on!", { body: reply.message });
-                                    await window.electronAPI.newNotification("Hold on!", reply.message);
-                                } else {
-                                    await window.electronAPI.newNotification("Hurray!", reply.message);
-                                }
-                            })
-                        } catch (error) {
-                            console.log(error)
-                        }
-                        populateTables();
-                    });
-                });
-                accept.appendChild(acceptButton);
-                row.appendChild(accept);
-                incomingTableBody.appendChild(row);        
-            });
-        }
-
-        let outgoingTable = document.querySelector('#outgoingRequestsTable');
-        if (outgoingTable) {
-            let outgoingTableBody = outgoingTable.querySelector('tbody');
-            outgoingTableBody.innerHTML = '';
-            outbound_requests.forEach(request => {
-                let row = document.createElement('tr');
-                let icon = document.createElement('td');
-                let name = document.createElement('td');
-                icon.innerHTML = `<i class="fas fa-user-plus"></i>`;
-                name.innerText = request.user_2;
+                console.log(userIconSet);
+                icon.innerHTML = `<img src="${userIconSet.profileImage}" alt="${outgoingReqs[i].user_2}'s profile image">`;
+                name.innerText = outgoingReqs[i].user_2;
                 row.appendChild(icon);
                 row.appendChild(name);
                 let actionsCell = document.createElement('td');
@@ -84,8 +35,8 @@ async function populateTables(){
                         },
                         body: JSON.stringify({
                             action: "cancel",
-                            sender: request.user_1,
-                            recipient: request.user_2
+                            sender: outgoingReqs[i].user_1,
+                            recipient: outgoingReqs[i].user_2
                         })
                     }).then(response =>  {
                         try {
@@ -107,41 +58,59 @@ async function populateTables(){
                 actionsCell.appendChild(cancelButton);
                 row.appendChild(actionsCell);
                 outgoingTableBody.appendChild(row);
+
+                if (i < outgoingLength - 1){
+                    next(i + 1);
+                } else {
+                    resolve();
+                }
             });
         }
+        next(0);
+    });
+}
 
-        let friendsTable = document.querySelector('#friendsTable');
-        if (friendsTable) {
-            let friendsTableBody = friendsTable.querySelector('tbody');
-            friendsTableBody.innerHTML = '';
-            console.log(friends);
-            friends.list.forEach(friend => {
+function populateIncoming(incomingReqs){
+    console.log(incomingReqs);
+    let incomingLength = incomingReqs.length;
+    let incomingTable = document.querySelector('#incomingRequestsTable');
+    let incomingTableBody = incomingTable.querySelector('tbody');
+    incomingTableBody.innerHTML = '';
+    return new Promise((resolve, reject) => {
+        function next(i){
+            fetch('/api/assets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    target: incomingReqs[i].user_1
+                })
+            }).then(response => response.json()).then((userIconSet) => {
                 let row = document.createElement('tr');
                 let icon = document.createElement('td');
                 let name = document.createElement('td');
-                icon.innerHTML = `<i class="fas fa-user-plus"></i>`;
-                name.innerText = friend;
+                console.log(userIconSet);
+                icon.innerHTML = `<img src="${userIconSet.profileImage}" alt="${incomingReqs[i].user_1}'s profile image">`;
+                name.innerText = incomingReqs[i].user_1;
                 row.appendChild(icon);
                 row.appendChild(name);
                 let actionsCell = document.createElement('td');
-                let removeButton = document.createElement('button');
-                removeButton.innerHTML = `<i class="fas fa-user-minus"></i>`;
-                removeButton.classList.add('fORURremoveActionButton');
-                removeButton.addEventListener('click', async function(event){
-                    // determine whether the friend is the sender or recipient
-                    let thisFriend = friends.entries.find(entry => entry.user_1 === friend || entry.user_2 === friend);
-                    console.log("THIS FRIEND", thisFriend);
+                let cancelButton = document.createElement('button');
+                cancelButton.innerHTML = `<i class="fas fa-times"></i>`;
+                cancelButton.classList.add('fORURcancelActionButton');
+                cancelButton.addEventListener('click', async function(event){
                     await fetch('/api/friends', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            action: "remove",
-                            sender: thisFriend.user_1,
-                            recipient: thisFriend.user_2
+                            action: "cancel",
+                            sender: incomingReqs[i].user_1,
+                            recipient: incomingReqs[i].user_2
                         })
-                    }).then(response => {
+                    }).then(response =>  {
                         try {
                             response.json().then(async (reply) => {
                                 console.log(reply)
@@ -158,11 +127,104 @@ async function populateTables(){
                         populateTables();
                     });
                 });
-                actionsCell.appendChild(removeButton);
+                actionsCell.appendChild(cancelButton);
                 row.appendChild(actionsCell);
-                friendsTableBody.appendChild(row);
+                incomingTableBody.appendChild(row);
+
+                if (i < incomingLength - 1){
+                    next(i + 1);
+                } else {
+                    resolve();
+                }
             });
         }
+        next(0);
+    });
+}
+
+function populateFriends(friends){
+    console.log(friends);
+    let friendsLength = friends.list.length;
+    let friendsTable = document.querySelector('#friendsTable');
+    let friendsTableBody = friendsTable.querySelector('tbody');
+    friendsTableBody.innerHTML = '';
+    return new Promise((resolve, reject) => {
+        function next(i){
+            fetch('/api/assets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    target: friends.list[i]
+                })
+            }).then(response => response.json()).then((userIconSet) => {
+                let row = document.createElement('tr');
+                let icon = document.createElement('td');
+                let name = document.createElement('td');
+                console.log(userIconSet);
+                icon.innerHTML = `<img src="${userIconSet.profileImage}" alt="${friends.list[i]}'s profile image">`;
+                name.innerText = friends.list[i];
+                row.appendChild(icon);
+                row.appendChild(name);
+                let actionsCell = document.createElement('td');
+                let cancelButton = document.createElement('button');
+                cancelButton.innerHTML = `<i class="fas fa-times"></i>`;
+                cancelButton.classList.add('fORURcancelActionButton');
+                cancelButton.addEventListener('click', async function(event){
+                    await fetch('/api/friends', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: "remove",
+                            sender: friends.entries[i].user_1,
+                            recipient: friends.entries[i].user_2
+                        })
+                    }).then(response =>  {
+                        try {
+                            response.json().then(async (reply) => {
+                                console.log(reply)
+                                if (reply.success == false){
+                                    // new Notification("Hold on!", { body: reply.message });
+                                    await window.electronAPI.newNotification("Hold on!", reply.message);
+                                } else {
+                                    await window.electronAPI.newNotification("Hurray!", reply.message);
+                                }
+                            })
+                        } catch (error) {
+                            console.log(error)
+                        }
+                        populateTables();
+                    });
+                });
+                actionsCell.appendChild(cancelButton);
+                row.appendChild(actionsCell);
+                friendsTableBody.appendChild(row);
+
+                if (i < friendsLength - 1){
+                    next(i + 1);
+                } else {
+                    resolve();
+                }
+            });
+        }
+        next(0);
+    });
+}
+
+async function populateTables(){
+    await fetch('/api/friends', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json().then(async data => {
+        let { friends, inbound_requests, outbound_requests } = data;
+        await populateIncoming(inbound_requests);
+        await populateOutgoing(outbound_requests);
+        await populateFriends(friends);
     }));
 }
 
