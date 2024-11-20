@@ -19,7 +19,6 @@ html(lang="en")
             #page
                 include ./components/navbar.pug
                 #pageContent
-                    #toastHolder
                     .dashboardSectionRow
                         .dashboardSectionCol
                             include ./components/cardBackpack.pug
@@ -31,6 +30,7 @@ html(lang="en")
                         .dashboardSectionCol
                             include ./components/cardLeaderboardTopTen.pug
                             include ./components/cardFriends.pug
+        #toastHolder
         script(src="/assets/js/modals.js")
         script(src="/assets/js/navbarToggle.js")
         script(src="/assets/js/client_new.js")
