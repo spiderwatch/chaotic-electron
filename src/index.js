@@ -273,6 +273,9 @@ function gameOn(){
             if (data.type == "broadcast"){
                 newNotification(data.title, data.body);
             }
+            else if (data.type == "message"){
+                newNotification(data.title, data.body);
+            }
             
         });
     });

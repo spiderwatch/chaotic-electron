@@ -75,7 +75,7 @@ h2{
     justify-content: center;
     width: calc(100% - 1rem);
     padding: 0.5rem;
-    backdrop-filter: blur(20px) brightness(0.1);
+    backdrop-filter: blur(20px) brightness(0.2);
 }
 #userImageName{
     display: flex;
