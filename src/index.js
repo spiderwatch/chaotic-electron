@@ -268,6 +268,13 @@ function gameOn(){
             thisUser = data.user;
             nextWorkerClaim = new Date(data.nextWorkerClaim).getTime();
         });
+
+        socket.on('event', (data) => {
+            if (data.type == "broadcast"){
+                newNotification(data.title, data.body);
+            }
+            
+        });
     });
 
     app.on('activate', function () {
