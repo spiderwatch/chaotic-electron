@@ -45,7 +45,7 @@ async function toast(header, content, faIcon) {
 
     let thisTimer = setInterval(() => {
         toastTimer.value += 10;
-        //console.log(toastTimer.value + '/' + toastTimer.max);
+        console.log(toastTimer.value + '/' + toastTimer.max);
     }, 10);
 
     setTimeout(() => {
