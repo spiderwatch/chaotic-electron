@@ -125,7 +125,6 @@ async function updateBackpackData() {
     }));
 
     updateListeners();
-    updateDataSections(true);
 
 }
 
